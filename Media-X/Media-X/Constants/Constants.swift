@@ -7,9 +7,9 @@
 
 import Foundation
 
+let IS_TESTING = true
 struct Constants{
 //    https://tumbler.onrender.com/
-    
     static let logInURL =
     URL(string: "https://tumbler.onrender.com/v0/auth/login")!
     static let registerURL =
@@ -40,4 +40,11 @@ struct Constants{
     static let getFollowingUsersStr = "https://tumbler.onrender.com/v0/followers/following-details/"
     static let getFollowersUsersStr = "https://tumbler.onrender.com/v0/followers/followers-details/"
 
+    
+    
+    static let TOKEN = "token"
+    static let MOCK_EMAIL = "moataz.mohamed.id2@gmail.com"
+    static let MOCK_PASSWORD = "MmMm@1234"
+    static let LOG_IN_TIME_STAMP = "loginTimestamp"
+    static let ERROR_MESSAGE = "The request timed out."
 }

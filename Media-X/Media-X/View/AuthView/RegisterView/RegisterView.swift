@@ -54,6 +54,7 @@ struct RegisterView: View {
 
             
         }
+        .navigationBarBackButtonHidden()
         .ignoresSafeArea()
         .dismissKeyboardOnTap()
     }

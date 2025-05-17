@@ -11,20 +11,52 @@ import SwiftUI
 struct Media_XApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var navigationStateManager = NavigationStateManager(selectionPath: [AppNavigationPath]())
+    @StateObject var globalLoading = GlobalLoading()
+    @StateObject var tokenManager = TokenManager()
     var body: some Scene {
         WindowGroup {
-            NavigationStack(path:$navigationStateManager.selectionPath){
-                LogInView()
-                    .navigationDestination(for: AppNavigationPath.self) { path in
-                    }
-            }
-            .onAppear {
-                UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
-            }
-            .environmentObject(navigationStateManager)
+            ContentView()
+                .environmentObject(navigationStateManager)
+                .environmentObject(globalLoading)
+                .environmentObject(tokenManager)
         }
     }
 }
+
+struct ContentView: View {
+    @EnvironmentObject var navigationStateManager: NavigationStateManager<AppNavigationPath>
+    @EnvironmentObject var tokenManager: TokenManager
+    
+    var body: some View {
+        NavigationStack(path: $navigationStateManager.selectionPath) {
+            LoadingView(isLoading: .constant(true))
+                .navigationDestination(for: AppNavigationPath.self) { path in
+                    switch path {
+                    case .login:
+                        LogInView()
+                    case .register:
+                        RegisterView()
+                    case .tabBar:
+                        Text("tabbar")
+                    }
+                }
+                .onAppear {
+                    UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+                }
+                .onReceive(tokenManager.sessionEnded) { isEnded in
+                    DispatchQueue.main.async {
+                        if isEnded {
+                            navigationStateManager.popToStage(stage: .login)
+                        } else {
+                            navigationStateManager.popToStage(stage: .tabBar)
+                        }
+                    }
+                }
+        }
+    }
+}
+
+
 
 class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDelegate {
     

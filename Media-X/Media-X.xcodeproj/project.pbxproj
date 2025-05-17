@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		00EA73982DD6FE80009CD7EB /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 00EA73972DD6FE80009CD7EB /* SwiftKeychainWrapper */; };
+		00EA75B12DD70010009CD7EB /* ActivityIndicatorView in Frameworks */ = {isa = PBXBuildFile; productRef = 00EA75B02DD70010009CD7EB /* ActivityIndicatorView */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		00A05A2B2DD6E1CE0009115E /* Media-X.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Media-X.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +41,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00EA75B12DD70010009CD7EB /* ActivityIndicatorView in Frameworks */,
+				00EA73982DD6FE80009CD7EB /* SwiftKeychainWrapper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +85,8 @@
 			);
 			name = "Media-X";
 			packageProductDependencies = (
+				00EA73972DD6FE80009CD7EB /* SwiftKeychainWrapper */,
+				00EA75B02DD70010009CD7EB /* ActivityIndicatorView */,
 			);
 			productName = "Media-X";
 			productReference = 00A05A2B2DD6E1CE0009115E /* Media-X.app */;
@@ -107,6 +116,10 @@
 			);
 			mainGroup = 00A05A222DD6E1CE0009115E;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				00EA73962DD6FE80009CD7EB /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
+				00EA75AF2DD70010009CD7EB /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 00A05A2C2DD6E1CE0009115E /* Products */;
 			projectDirPath = "";
@@ -349,6 +362,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		00EA73962DD6FE80009CD7EB /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jrendel/SwiftKeychainWrapper.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.1;
+			};
+		};
+		00EA75AF2DD70010009CD7EB /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/ActivityIndicatorView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		00EA73972DD6FE80009CD7EB /* SwiftKeychainWrapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 00EA73962DD6FE80009CD7EB /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */;
+			productName = SwiftKeychainWrapper;
+		};
+		00EA75B02DD70010009CD7EB /* ActivityIndicatorView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 00EA75AF2DD70010009CD7EB /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */;
+			productName = ActivityIndicatorView;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 00A05A232DD6E1CE0009115E /* Project object */;
 }

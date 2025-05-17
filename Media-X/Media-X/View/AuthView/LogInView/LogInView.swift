@@ -8,12 +8,16 @@
 import SwiftUI
 
 struct LogInView: View {
+    @StateObject private var viewModel = LogInViewModel()
     @StateObject private var keyBoardManager = KeyboardObserver()
+    @EnvironmentObject var navigationStateManager: NavigationStateManager<AppNavigationPath>
     var body: some View {
         ZStack(alignment:keyBoardManager.isKeyboardVisible ? .top:.bottom){
             Color
                 ._3_B_9678
-                
+                .onReceive(viewModel.navigationSubject) {
+                    navigationStateManager.pushToStage(stage: .tabBar)
+                }
             
             VStack(spacing:50) {
                 TopSheetRecView()
@@ -27,13 +31,13 @@ struct LogInView: View {
                         placeHolder: "Enter Your Email address",
                         icon: "envelope",
                         isSecured: false,
-                        text: .constant("")
+                        text: $viewModel.email
                     )
                     CustomTextFieldView(
                         placeHolder: "Enter Password",
                         icon: "lock",
                         isSecured: true,
-                        text: .constant("")
+                        text: $viewModel.passWord
                     )
                     
                 }
@@ -43,7 +47,9 @@ struct LogInView: View {
                     
                     MainButtonView(
                         title: "Log In",
-                        isDisabled: false){}
+                        isDisabled: viewModel.isButtonDisabled()){
+                            viewModel.sendRequest()
+                        }
                     
                     
                     HStack {
@@ -72,8 +78,30 @@ struct LogInView: View {
             )
             .padding(.top , keyBoardManager.isKeyboardVisible ? 80 : 0)
 
+            if viewModel.isLoading {
+                LoadingView(isLoading: $viewModel.isLoading)
+            }
             
+            if viewModel.showError {
+                
+                Color
+                    .black
+                    .opacity(0.5)
+                    .onTapGesture {
+                        viewModel.showError = false
+                    }
+                VStack {
+                    Spacer()
+                    ErrorView(errorMessage: viewModel.errorMessage) {
+                        viewModel.showError = false
+                    }
+                    .frame(width: 280)
+                    .clipShape(RoundedRectangle(cornerRadius: 32))
+                    Spacer()
+                }
+            }
         }
+        .navigationBarBackButtonHidden()
         .ignoresSafeArea()
         .dismissKeyboardOnTap()
     }
