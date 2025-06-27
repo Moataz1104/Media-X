@@ -17,7 +17,7 @@ class TokenManager : ObservableObject {
     private let sessionDuration: TimeInterval = 24 * 60 * 59
     
     init() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {[weak self] in
+        DispatchQueue.main.async {[weak self] in
             self?.checkSessionStatus()
         }
     }

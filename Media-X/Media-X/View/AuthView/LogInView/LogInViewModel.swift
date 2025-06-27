@@ -34,15 +34,18 @@ class LogInViewModel : ObservableObject {
                 print("authService.logInUser\n\(token)")
                 KeychainWrapper.standard.set(token, forKey: Constants.TOKEN)
                 UserDefaults.standard.set(Date(), forKey: Constants.LOG_IN_TIME_STAMP)
-                navigationSubject.send(())
+                await MainActor.run {
+                    self.navigationSubject.send(())
+                }
             case .failure(let failure):
                 await MainActor.run {
                     self.showError = true
                     self.errorMessage = failure.localizedDescription
+                    if failure.localizedDescription == Constants.ERROR_MESSAGE {
+                        self.errorMessage += " Please try Again the server is sleeping"
+                    }
                 }
-                if failure.localizedDescription == Constants.ERROR_MESSAGE {
-                    self.errorMessage += "Please try Again the server is sleeping"
-                }
+                
                 print(failure.localizedDescription)
                 
             }

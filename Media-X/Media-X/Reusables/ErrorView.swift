@@ -24,6 +24,7 @@ struct ErrorView: View {
             
             Text(errorMessage)
                 .font(.custom(CustomFonts.playFairRegular, size: 16))
+                .multilineTextAlignment(.center)
                 .foregroundStyle(.gray)
             
             Button {

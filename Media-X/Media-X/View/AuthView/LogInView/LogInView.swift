@@ -57,7 +57,7 @@ struct LogInView: View {
                             .font(.custom(CustomFonts.playFairRegular, size: 15))
                         
                         Button {
-                            
+                            navigationStateManager.pushToStage(stage: .register)
                         }label: {
                             Text("Sign Up")
                                 .font(.custom(CustomFonts.playFairRegular, size: 15))

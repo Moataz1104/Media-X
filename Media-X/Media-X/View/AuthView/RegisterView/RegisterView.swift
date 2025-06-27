@@ -9,11 +9,16 @@ import SwiftUI
 
 struct RegisterView: View {
     @StateObject private var keyBoardManager = KeyboardObserver()
+    @StateObject private var viewModel = RegisterViewModel()
+    @State private var showSuccessAlert = false
+    @Environment(\.dismiss) var dismiss
     var body: some View {
         ZStack(alignment:keyBoardManager.isKeyboardVisible ? .top:.bottom){
             Color
                 ._3_B_9678
-                
+                .onReceive(viewModel.registerSuccessSubject) { _ in
+                    showSuccessAlert = true
+                }
             
             VStack(spacing:50) {
                 TopSheetRecView()
@@ -23,7 +28,9 @@ struct RegisterView: View {
                     
                     MainButtonView(
                         title: "Register",
-                        isDisabled: false){}
+                        isDisabled: false) {
+                            viewModel.registerUser()
+                        }
                     
                     
                     HStack {
@@ -31,7 +38,7 @@ struct RegisterView: View {
                             .font(.custom(CustomFonts.playFairRegular, size: 15))
                         
                         Button {
-                            
+                            dismiss()
                         }label: {
                             Text("LogIn")
                                 .font(.custom(CustomFonts.playFairRegular, size: 15))
@@ -52,7 +59,47 @@ struct RegisterView: View {
             )
             .padding(.top , keyBoardManager.isKeyboardVisible ? 40 : 0)
 
+            if viewModel.showAlert {
+                
+                Color
+                    .black
+                    .opacity(0.5)
+                    .onTapGesture {
+                        viewModel.showAlert = false
+                    }
+                VStack {
+                    Spacer()
+                    ErrorView(errorMessage: viewModel.errorMessage) {
+                        viewModel.showAlert = false
+                    }
+                    .frame(width: 280)
+                    .clipShape(RoundedRectangle(cornerRadius: 32))
+                    Spacer()
+                }
+            }
             
+            if showSuccessAlert {
+                
+                Color
+                    .black
+                    .opacity(0.5)
+                VStack {
+                    Spacer()
+                    RegisterSuccessAlert()
+                    .clipShape(RoundedRectangle(cornerRadius: 32))
+                    Spacer()
+                }
+                .frame(width: 280)
+                .onAppear{
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                        dismiss()
+                    }
+                }
+            }
+            
+            if viewModel.isLoading {
+                LoadingView(isLoading: $viewModel.isLoading)
+            }
         }
         .navigationBarBackButtonHidden()
         .ignoresSafeArea()
@@ -76,26 +123,26 @@ struct RegisterView: View {
                     placeHolder: "Enter Your Name",
                     icon: "person",
                     isSecured: false,
-                    text: .constant("")
+                    text: $viewModel.name
                 )
                 CustomTextFieldView(
                     placeHolder: "Enter Your Email address",
                     icon: "envelope",
                     isSecured: false,
-                    text: .constant("")
+                    text: $viewModel.email
                 )
                 CustomTextFieldView(
                     placeHolder: "Enter Password",
                     icon: "lock",
                     isSecured: true,
-                    text: .constant("")
+                    text: $viewModel.passWord
                 )
                 
                 CustomTextFieldView(
                     placeHolder: "Confirm Password",
                     icon: "lock",
                     isSecured: true,
-                    text: .constant("")
+                    text: $viewModel.confPassword
                 )
                 
             }
