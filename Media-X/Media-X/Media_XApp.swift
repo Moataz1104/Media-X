@@ -15,7 +15,7 @@ struct Media_XApp: App {
     @StateObject var tokenManager = TokenManager()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TabBarView()
                 .environmentObject(navigationStateManager)
                 .environmentObject(globalLoading)
                 .environmentObject(tokenManager)
