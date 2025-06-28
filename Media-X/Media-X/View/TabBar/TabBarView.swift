@@ -21,8 +21,8 @@ struct TabBarView: View {
                 Group {
                     switch selectedTab {
                     case 0 :
-                        Color
-                            .white
+                        HomeView()
+                            .padding(.top,40)
                     case 1:
                         Color
                             .blue
@@ -39,7 +39,9 @@ struct TabBarView: View {
                         Text("error")
                     }
                 }
+                
                 .clipShape(UnevenRoundedRectangle(cornerRadii: .init(bottomLeading: 45,bottomTrailing: 45)))
+                
                 
                 CustomBarView(selectedTab: $selectedTab)
                 

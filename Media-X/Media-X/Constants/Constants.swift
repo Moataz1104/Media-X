@@ -14,9 +14,8 @@ struct Constants{
     static let SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpdmhoZnBwY3J1aGl4eGF0bGZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMTQ1MzMsImV4cCI6MjA2NjY5MDUzM30.j0owH8A2Go6RvVvjrkTYkGrrPx_7KtABsDWsVD6NaUE"
     
     static let SUPABASE_PROJECT_URL_STRING = "https://bivhhfppcruhixxatlfh.supabase.co"
-    static let SUPABASE_STORAGE_END_POINT = "https://bivhhfppcruhixxatlfh.supabase.co/storage/v1/s3/object/public/"
+    static let SUPABASE_STORAGE_END_POINT = "https://bivhhfppcruhixxatlfh.supabase.co/storage/v1/object/public/"
 
-    
     //MARK: - Tables
     
     static let USERS_TABLE = "users"
