@@ -15,4 +15,5 @@ enum FontsEnum :String {
     case regular = "Poppins-Regular"
     case medium = "Poppins-Medium"
     case semiBold = "Poppins-SemiBold"
+    case leckerli = "LeckerliOne-Regular"
 }

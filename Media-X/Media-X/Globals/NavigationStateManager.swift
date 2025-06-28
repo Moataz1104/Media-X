@@ -29,7 +29,7 @@ class NavigationStateManager<NavigationStage: Hashable>: ObservableObject {
 }
 
 enum AppNavigationPath: Hashable {
-    case login
-    case register
     case tabBar
+    case onBoarding
+    case register
 }

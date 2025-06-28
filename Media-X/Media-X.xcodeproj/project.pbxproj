@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0012E5C42E10200400AAE957 /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 0012E5C32E10200400AAE957 /* Auth */; };
+		0012E5C62E10200400AAE957 /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 0012E5C52E10200400AAE957 /* Realtime */; };
+		0012E5C82E10200400AAE957 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 0012E5C72E10200400AAE957 /* Storage */; };
+		0012E5CA2E10200400AAE957 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 0012E5C92E10200400AAE957 /* Supabase */; };
+		0012E88D2E102CC100AAE957 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 0012E88C2E102CC100AAE957 /* GoogleSignIn */; };
+		0012E88F2E102CC100AAE957 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0012E88E2E102CC100AAE957 /* GoogleSignInSwift */; };
 		00EA73982DD6FE80009CD7EB /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 00EA73972DD6FE80009CD7EB /* SwiftKeychainWrapper */; };
 		00EA75B12DD70010009CD7EB /* ActivityIndicatorView in Frameworks */ = {isa = PBXBuildFile; productRef = 00EA75B02DD70010009CD7EB /* ActivityIndicatorView */; };
 /* End PBXBuildFile section */
@@ -43,6 +49,12 @@
 			files = (
 				00EA75B12DD70010009CD7EB /* ActivityIndicatorView in Frameworks */,
 				00EA73982DD6FE80009CD7EB /* SwiftKeychainWrapper in Frameworks */,
+				0012E5CA2E10200400AAE957 /* Supabase in Frameworks */,
+				0012E88F2E102CC100AAE957 /* GoogleSignInSwift in Frameworks */,
+				0012E5C42E10200400AAE957 /* Auth in Frameworks */,
+				0012E5C82E10200400AAE957 /* Storage in Frameworks */,
+				0012E5C62E10200400AAE957 /* Realtime in Frameworks */,
+				0012E88D2E102CC100AAE957 /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +99,12 @@
 			packageProductDependencies = (
 				00EA73972DD6FE80009CD7EB /* SwiftKeychainWrapper */,
 				00EA75B02DD70010009CD7EB /* ActivityIndicatorView */,
+				0012E5C32E10200400AAE957 /* Auth */,
+				0012E5C52E10200400AAE957 /* Realtime */,
+				0012E5C72E10200400AAE957 /* Storage */,
+				0012E5C92E10200400AAE957 /* Supabase */,
+				0012E88C2E102CC100AAE957 /* GoogleSignIn */,
+				0012E88E2E102CC100AAE957 /* GoogleSignInSwift */,
 			);
 			productName = "Media-X";
 			productReference = 00A05A2B2DD6E1CE0009115E /* Media-X.app */;
@@ -119,6 +137,8 @@
 			packageReferences = (
 				00EA73962DD6FE80009CD7EB /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
 				00EA75AF2DD70010009CD7EB /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */,
+				0012E5C22E10200400AAE957 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				0012E88B2E102CC100AAE957 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 00A05A2C2DD6E1CE0009115E /* Products */;
@@ -278,6 +298,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Media-X/Preview Content\"";
+				DEVELOPMENT_TEAM = MT6D65325Z;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Media-X/Info.plist";
@@ -313,6 +334,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Media-X/Preview Content\"";
+				DEVELOPMENT_TEAM = MT6D65325Z;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Media-X/Info.plist";
@@ -364,6 +386,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0012E5C22E10200400AAE957 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+		0012E88B2E102CC100AAE957 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 		00EA73962DD6FE80009CD7EB /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jrendel/SwiftKeychainWrapper.git";
@@ -383,6 +421,36 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0012E5C32E10200400AAE957 /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0012E5C22E10200400AAE957 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		0012E5C52E10200400AAE957 /* Realtime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0012E5C22E10200400AAE957 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Realtime;
+		};
+		0012E5C72E10200400AAE957 /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0012E5C22E10200400AAE957 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Storage;
+		};
+		0012E5C92E10200400AAE957 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0012E5C22E10200400AAE957 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+		0012E88C2E102CC100AAE957 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0012E88B2E102CC100AAE957 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		0012E88E2E102CC100AAE957 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0012E88B2E102CC100AAE957 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
 		00EA73972DD6FE80009CD7EB /* SwiftKeychainWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 00EA73962DD6FE80009CD7EB /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */;

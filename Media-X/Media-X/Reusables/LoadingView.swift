@@ -17,7 +17,8 @@ struct LoadingView: View {
                 .black
                 .opacity(0.5)
                 .ignoresSafeArea()
-            ActivityIndicatorView(isVisible: $isLoading, type: .growingCircle)
+            ActivityIndicatorView(isVisible: $isLoading, type: .rotatingDots(count: 5))
+                .frame(width:200,height: 200)
                 .foregroundStyle(._3_B_9678)
                 .onAppear{
                     globalLoading.isLoading = true
