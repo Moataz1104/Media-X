@@ -42,7 +42,7 @@ class LogInViewModel : ObservableObject {
                     self.showError = true
                     self.errorMessage = failure.localizedDescription
                     if failure.localizedDescription == Constants.ERROR_MESSAGE {
-                        self.errorMessage += " Please try Again the server is sleeping"
+                        self.errorMessage += Constants.ERROR_COMPLETION
                     }
                 }
                 

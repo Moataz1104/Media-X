@@ -31,6 +31,7 @@ class TokenManager : ObservableObject {
             sessionEnded.send(true)
             return
         }
+        print(KeychainWrapper.standard.string(forKey: Constants.TOKEN))
         
         let timeElapsed = Date().timeIntervalSince(loginTimestamp)
         

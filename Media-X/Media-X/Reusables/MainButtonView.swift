@@ -17,7 +17,7 @@ struct MainButtonView:View {
             action()
         }label: {
             Text(title)
-                .font(.custom(CustomFonts.playFairMediym, size: 20))
+                .customFont(.medium, size: 20)
                 .foregroundStyle(.white)
                 .frame(height: 56)
                 .frame(maxWidth: .infinity)

@@ -21,27 +21,14 @@ struct TabBarButtonView:View {
                     .renderingMode(.template)
                     .resizable()
                     .scaledToFit()
-                    .frame(width:selectedTab == index ? 20 : 25, height: selectedTab == index ? 20 : 25)
-                    .foregroundStyle(selectedTab == index ? .white: .gray)
-                    .frame(width: 50, height: 50)
-                    .background(
-                        selectedTab == index ? LinearGradient(
-                            colors: [._1_C_3_F_3_A , ._3_B_9678 , .A_8_E_6_CF],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ) : LinearGradient(
-                            colors: [.clear],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
-                    .clipShape(.circle)
+                    .frame(width: 25,height: 25)
+                    .foregroundStyle(.white)
                 
-//                if selectedTab == index{
-//                    Circle()
-//                        .frame(width: 5,height: 5)
-//                        .foregroundStyle(._3_B_9678)
-//                }
+                if selectedTab == index{
+                    Circle()
+                        .frame(width: 5,height: 5)
+                        .foregroundStyle(.white)
+                }
             }
         }
 

@@ -14,34 +14,38 @@ struct TabBarView: View {
     
     var body: some View {
         ZStack{
+            Color
+                ._3_B_9678
+                .ignoresSafeArea()
             VStack(spacing:0){
-                
-                switch selectedTab {
-                case 0 :
-                    Color
-                        .blue
-                case 1:
-                    Color
-                        .blue
-                case 2:
-                    Color
-                        .blue
-                case 3 :
-                    Color
-                        .blue
-                case 4 :
-                    Color
-                        .blue
-                default:
-                    Text("error")
+                Group {
+                    switch selectedTab {
+                    case 0 :
+                        Color
+                            .white
+                    case 1:
+                        Color
+                            .blue
+                    case 2 :
+                        Color
+                            .blue
+                    case 3 :
+                        Color
+                            .blue
+                    case 4 :
+                        Color
+                            .blue
+                    default:
+                        Text("error")
+                    }
                 }
+                .clipShape(UnevenRoundedRectangle(cornerRadii: .init(bottomLeading: 45,bottomTrailing: 45)))
                 
-                
-//                Spacer()
                 CustomBarView(selectedTab: $selectedTab)
                 
             }
-            .ignoresSafeArea(edges:.bottom)
+            .ignoresSafeArea()
+            
             if globalLoading.isLoading {
                 Color.black.opacity(0.5)
                     .ignoresSafeArea()

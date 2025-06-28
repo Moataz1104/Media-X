@@ -47,4 +47,5 @@ struct Constants{
     static let MOCK_PASSWORD = "MmMm@1234"
     static let LOG_IN_TIME_STAMP = "loginTimestamp"
     static let ERROR_MESSAGE = "The request timed out."
+    static let ERROR_COMPLETION = " Please try Again the server is sleeping"
 }

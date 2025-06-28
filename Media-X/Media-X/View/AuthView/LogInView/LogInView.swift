@@ -23,7 +23,7 @@ struct LogInView: View {
                 TopSheetRecView()
                 
                 Text("Welcome Back")
-                    .font(.custom(CustomFonts.playFairBold, size: 32))
+                    .customFont(.bold, size: 32)
                     .frame(maxWidth: .infinity,alignment: .leading)
                 VStack(spacing:20) {
                     
@@ -54,13 +54,13 @@ struct LogInView: View {
                     
                     HStack {
                         Text("Do not have account ?")
-                            .font(.custom(CustomFonts.playFairRegular, size: 15))
+                            .customFont(.regular, size: 15)
                         
                         Button {
                             navigationStateManager.pushToStage(stage: .register)
                         }label: {
                             Text("Sign Up")
-                                .font(.custom(CustomFonts.playFairRegular, size: 15))
+                                .customFont(.regular, size: 15)
                                 .foregroundStyle(._3_B_9678)
                         }
                     }

@@ -31,5 +31,19 @@ extension View {
                 )
             }
     }
+}
 
+//MARK: - CustomFonts
+struct CustomFontModifier: ViewModifier {
+    let fontName: FontsEnum
+    let size: CGFloat
+    func body(content: Content) -> some View {
+        content
+            .font(.custom(fontName.rawValue, size: size))
+    }
+}
+extension View {
+    func customFont(_ fontName: FontsEnum, size: CGFloat) -> some View {
+        modifier(CustomFontModifier(fontName: fontName, size: size))
+    }
 }

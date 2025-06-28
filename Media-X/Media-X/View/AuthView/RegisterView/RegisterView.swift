@@ -35,13 +35,13 @@ struct RegisterView: View {
                     
                     HStack {
                         Text("Already have account ?")
-                            .font(.custom(CustomFonts.playFairRegular, size: 15))
+                            .customFont(.regular, size: 15)
                         
                         Button {
                             dismiss()
                         }label: {
                             Text("LogIn")
-                                .font(.custom(CustomFonts.playFairRegular, size: 15))
+                                .customFont(.regular, size: 15)
                                 .foregroundStyle(._3_B_9678)
                         }
                     }
@@ -110,10 +110,10 @@ struct RegisterView: View {
         VStack {
             VStack(alignment: .leading,spacing:20){
                 Text("Welcome")
-                    .font(.custom(CustomFonts.playFairBold, size: 32))
+                    .customFont(.bold, size: 32)
                 
                 Text("Create Account to keep exploring amazing destinations around the world!")
-                    .font(.custom(CustomFonts.playFairRegular, size: 14))
+                    .customFont(.regular, size: 14)
                     .foregroundStyle(.gray)
             }
                 .frame(maxWidth: .infinity,alignment: .leading)

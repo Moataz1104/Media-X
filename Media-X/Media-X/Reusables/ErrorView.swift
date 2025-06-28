@@ -13,7 +13,7 @@ struct ErrorView: View {
     var body: some View {
         VStack {
             Text("Network Error")
-                .font(.custom(CustomFonts.playFairSemiBold, size: 20))
+                .customFont(.semiBold, size: 20)
                 .foregroundStyle(.black)
             
             Image(.error)
@@ -23,7 +23,7 @@ struct ErrorView: View {
             
             
             Text(errorMessage)
-                .font(.custom(CustomFonts.playFairRegular, size: 16))
+                .customFont(.regular, size: 16)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.gray)
             
@@ -31,7 +31,7 @@ struct ErrorView: View {
                 action()
             }label: {
                 Text("OK")
-                    .font(.custom(CustomFonts.playFairRegular, size: 20))
+                    .customFont(.regular, size: 20)
                     .foregroundStyle(.white)
                     .frame(minHeight: 50)
                     .frame(maxWidth: .infinity)

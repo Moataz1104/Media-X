@@ -8,10 +8,11 @@
 import Foundation
 
 
-struct CustomFonts {
-    static let playFairBold = "Poppins-Bold"
-    static let playFairExtraBold = "Poppins-ExtraBold"
-    static let playFairMediym = "Poppins-Medium"
-    static let playFairRegular = "Poppins-Regular"
-    static let playFairSemiBold = "Poppins-SemiBold"
+
+enum FontsEnum :String {
+    case bold = "Poppins-Bold"
+    case extraBold = "Poppins-ExtraBold"
+    case regular = "Poppins-Regular"
+    case medium = "Poppins-Medium"
+    case semiBold = "Poppins-SemiBold"
 }
