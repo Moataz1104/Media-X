@@ -15,6 +15,11 @@ struct SBUserModel :SupabaseUploadable{
     var id:UUID
     var name:String
     var imageId:String
-    var email:String
     
+    
+    enum CodingKeys : String, CodingKey {
+        case id
+        case name
+        case imageId = "image_id"
+    }
 }

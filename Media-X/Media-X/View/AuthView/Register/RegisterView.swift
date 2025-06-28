@@ -10,6 +10,7 @@ import SwiftUI
 struct RegisterView: View {
     @StateObject private var viewModel = RegisterViewModel()
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var navigationStateManager: NavigationStateManager<AppNavigationPath>
     var body: some View {
         ZStack{
             VStack {
@@ -64,14 +65,13 @@ struct RegisterView: View {
                 LoadingView(isLoading: $viewModel.isLoading)
             }
         }
+        .onReceive(viewModel.successSubject, perform: { _ in
+            navigationStateManager.pushToStage(stage: .userForm)
+        })
         .dismissKeyboardOnTap()
         .navigationBarBackButtonHidden()
         .alert(viewModel.errorTitle, isPresented: $viewModel.showAlert, actions: {}, message: {
             Text(viewModel.errorMessage)
         })
     }
-}
-
-#Preview {
-    RegisterView()
 }

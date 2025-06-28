@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import Combine
 @MainActor
 class RegisterViewModel : ObservableObject {
     @Published var email:String = ""
@@ -18,6 +18,8 @@ class RegisterViewModel : ObservableObject {
     @Published var isLoading = false
 
     
+    var successSubject = PassthroughSubject<Void,Never>()
+    
     
     @MainActor
     func register() {
@@ -26,7 +28,7 @@ class RegisterViewModel : ObservableObject {
         Task {
             do {
                 try await AuthManager.shared.signUpEmail(email: email, password: passWord)
-                print(AuthManager.shared.getUID())
+                successSubject.send(())
             }catch{
                 print(error.localizedDescription)
                 showAlert = true

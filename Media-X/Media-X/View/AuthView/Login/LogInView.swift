@@ -104,7 +104,7 @@ struct LogInView: View {
                 navigationStateManager.pushToStage(stage: .tabBar)
                 
             }else{
-                navigationStateManager.pushToStage(stage: .onBoarding)
+                navigationStateManager.pushToStage(stage: .userForm)
             }
         }
         .alert("Invalid", isPresented: $viewModel.showError, actions: {}, message: {

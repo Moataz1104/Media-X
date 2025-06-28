@@ -7,7 +7,35 @@
 
 import Foundation
 
-class UserManager : ObservableObject {
+protocol UserManagerProtocol {
     
-    @Published var user :SBUserModel?
+    func uploadUser(model:SBUserModel) async throws -> Result<Void, any Error>
+    func deleteUserImage(fileName:String,filePath: String) async throws -> Bool
+    func uploadUserImage(imageData:Data,filePath:String) async throws -> Result<String, any Error>
+    func updateUser(model:SBUserModel)async throws -> Result<SBUserModel?, any Error>
+    func getUserId() -> UUID?
+}
+
+class UserManager : UserManagerProtocol , SupaBaseFunctions {
+    
+    func updateUser(model:SBUserModel)async throws -> Result<SBUserModel?, any Error> {
+        try await updateModel(model, id: model.id)
+    }
+    
+    func deleteUserImage(fileName:String,filePath: String) async throws -> Bool {
+        try await deleteStorageItem(fileName: fileName, bucketName: Constants.USERS_IMAGES_BUCKET, folderPath: filePath)
+    }
+    
+    func uploadUserImage(imageData:Data,filePath:String) async throws -> Result<String, any Error> {
+        try await uploadFileToStorage(bucket: Constants.USERS_IMAGES_BUCKET, filePath: filePath, fileData: imageData , contentType: "application/octet-stream")
+        
+    }
+    
+    func uploadUser(model:SBUserModel) async throws -> Result<Void, any Error> {
+        try await uploadModel(model)
+    }
+    
+    func getUserId() -> UUID? {
+        getUserUID()
+    }
 }

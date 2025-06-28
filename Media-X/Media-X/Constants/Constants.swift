@@ -23,7 +23,7 @@ struct Constants{
     
     
     //MARK: - Buckets
-    
+    static let USERS_IMAGES_BUCKET = "users.images"
     
     
     //MARK: - Keys

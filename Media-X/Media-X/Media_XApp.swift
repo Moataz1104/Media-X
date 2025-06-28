@@ -12,34 +12,34 @@ struct Media_XApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var navigationStateManager = NavigationStateManager(selectionPath: [AppNavigationPath]())
     @StateObject var globalLoading = GlobalLoading()
-    @StateObject var userManager = UserManager()
+    @StateObject var globalUser = GlobalUser()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(navigationStateManager)
                 .environmentObject(globalLoading)
-                .environmentObject(userManager)
+                .environmentObject(globalUser)
         }
     }
 }
 
 struct ContentView: View {
     @EnvironmentObject var navigationStateManager: NavigationStateManager<AppNavigationPath>
-    @EnvironmentObject var userManager : UserManager
+    @EnvironmentObject var globalUser : GlobalUser
     var body: some View {
         NavigationStack(path: $navigationStateManager.selectionPath) {
             StartView(){userData in
-                userManager.user = userData
+                globalUser.user = userData
             }
             .navigationDestination(for: AppNavigationPath.self) { path in
                 switch path {
                 case .tabBar:
                     TabBarView()
-                case .onBoarding :
-                    Text("onBoarding")
                 case .register :
                     RegisterView()
+                case .userForm:
+                    UserFormView()
                 }
             }
             .onAppear {
@@ -53,7 +53,7 @@ struct StartView:View {
     @State private var user:SBUserModel?
     @State private var isLoading = true
     @State private var requestSent = false
-    @EnvironmentObject var userManager:UserManager
+    @EnvironmentObject var globalUser:GlobalUser
     let userDataClosure:(SBUserModel) -> Void
     var body: some View {
         VStack{
