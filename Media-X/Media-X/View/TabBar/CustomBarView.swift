@@ -10,6 +10,7 @@ import SwiftUI
 struct CustomBarView: View {
     @Binding var selectedTab:Int
     @State private var showAlert = false
+    @State private var showAddPostSheet = false
     var body: some View {
         
             HStack{
@@ -29,9 +30,7 @@ struct CustomBarView: View {
                 }
                 Spacer()
                 TabBarButtonView(selectedTab: $selectedTab,icon:.plusIcon, index: 2){
-                    withAnimation {
-                        selectedTab = 2
-                    }
+                    showAddPostSheet = true
                 }
                 Spacer()
                 
@@ -51,6 +50,9 @@ struct CustomBarView: View {
             }
             .padding(.top)
             .frame(height: 100,alignment: .top)
+            .sheet(isPresented: $showAddPostSheet) {
+                AddPostView(showAddPostSheet:$showAddPostSheet)
+            }
     }
 }
 

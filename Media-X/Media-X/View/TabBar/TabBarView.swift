@@ -27,8 +27,7 @@ struct TabBarView: View {
                         Color
                             .blue
                     case 2 :
-                        Color
-                            .blue
+                        Text("")
                     case 3 :
                         Color
                             .blue

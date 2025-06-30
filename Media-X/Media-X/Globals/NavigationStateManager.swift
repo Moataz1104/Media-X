@@ -33,3 +33,8 @@ enum AppNavigationPath: Hashable {
     case register
     case userForm
 }
+
+
+enum AddPostNavigationPath: Hashable {
+    case addCaption
+}
