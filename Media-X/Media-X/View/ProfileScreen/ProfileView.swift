@@ -52,8 +52,9 @@ struct ProfileView: View {
                     }
                 }
             }
-            if let _ = onTapId {
-                ProfileFeedsView(scrollId: $onTapId, posts: viewModel.posts)
+            if let _ = onTapId  {
+                let posts = viewModel.selectedTab == .photos ? viewModel.posts : viewModel.bookmarks
+                ProfileFeedsView(scrollId: $onTapId, posts: posts)
                     .transition(.asymmetric(insertion: .opacity, removal: .opacity))
             }
         }
@@ -167,7 +168,10 @@ struct ProfileView: View {
                     }
                 }
             } else {
-                ProfilePhotosGrid(posts:[]) { _ in
+                ProfilePhotosGrid(posts:viewModel.bookmarks) { id in
+                    withAnimation {
+                        self.onTapId = id
+                    }
                 }
             }
         }
@@ -326,19 +330,19 @@ struct ProfileView: View {
                     
                     HStack {
                         Spacer()
-                        stateView(count: "2", text: "Posts")
+                        stateView(count: viewModel.selectedTab == .photos ? "\(viewModel.postsCount)" : "\(viewModel.bookmarks.count)", text: "Posts")
                         Spacer()
                         Rectangle()
                             .frame(width: 1)
                             .foregroundStyle(.gray.opacity(0.5))
                         Spacer()
-                        stateView(count: "100", text: "followers")
+                        stateView(count: "\(viewModel.followersCount)", text: "followers")
                         Spacer()
                         Rectangle()
                             .frame(width: 1)
                             .foregroundStyle(.gray.opacity(0.5))
                         Spacer()
-                        stateView(count: "30", text: "Followings")
+                        stateView(count: "\(viewModel.followingCount)", text: "Followings")
                         Spacer()
                     }
                 }

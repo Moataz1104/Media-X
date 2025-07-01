@@ -40,7 +40,9 @@ struct ProfileFeedsView:View {
                     .padding()
                 }
                 .onAppear {
-                    proxy.scrollTo(scrollId, anchor: .center)
+                    if let scrollId = scrollId {
+                        proxy.scrollTo(scrollId, anchor: .center)
+                    }
                 }
             }
             .offset(x: offset.width)
