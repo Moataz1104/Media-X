@@ -7,14 +7,16 @@
 
 import Foundation
 
-protocol UserManagerProtocol {
+protocol UserManagerProtocol:UserIDFetchable {
     
     func uploadUser(model:SBUserModel) async throws -> Result<Void, any Error>
     func deleteUserImage(fileName:String,filePath: String) async throws -> Bool
     func uploadUserImage(imageData:Data,filePath:String) async throws -> Result<String, any Error>
     func updateUser(model:SBUserModel)async throws -> Result<SBUserModel?, any Error>
-    func getUserId() -> UUID?
+    
 }
+
+
 
 class UserManager : UserManagerProtocol , SupaBaseFunctions {
     
@@ -35,7 +37,5 @@ class UserManager : UserManagerProtocol , SupaBaseFunctions {
         try await uploadModel(model)
     }
     
-    func getUserId() -> UUID? {
-        getUserUID()
-    }
+    
 }

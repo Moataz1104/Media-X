@@ -19,16 +19,38 @@ final class AddPostViewModel: ObservableObject {
     
     @Published var imageList: [ImageModel] = []
     @Published var caption = ""
-    @Published var selectedImageId : String? = nil
-    @Published var imageData: Data?
-    
+    @Published var selectedImageIds : [String] = []
+    @Published var imagesData: [Data] = []
+    @Published var showError: Bool = false
     init(galleryManager: GalleryManager = GalleryManager()) {
         self.galleryManager = galleryManager
         fetchAllPhotos()
     }
     
-    func getImageDate(image:UIImage) {
-        imageData = galleryManager.imageToData(image,compressionQuality: 1)
+    func handleOnTapImage(_ image: UIImage,id:String) {
+        guard selectedImageIds.count < 6 else{
+            showError = true
+            return
+        }
+        if let index = selectedImageIds.firstIndex(of: id) {
+            selectedImageIds.remove(at: index)
+            imagesData.remove(at: index)
+        }else {
+            selectedImageIds.append(id)
+            getImageDate(image: image)
+        }
+    }
+    
+    func handleRemoveImageData(data:Data) {
+        if let index = imagesData.firstIndex(of: data) {
+            selectedImageIds.remove(at: index)
+            imagesData.remove(at: index)
+        }
+    }
+    
+    private func getImageDate(image:UIImage) {
+        guard let data = galleryManager.imageToData(image,compressionQuality: 1) else{return}
+        imagesData.append(data)
     }
     
     func fetchImage(by id: String, targetSize: CGSize) async -> UIImage? {

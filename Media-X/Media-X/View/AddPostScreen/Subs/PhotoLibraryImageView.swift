@@ -37,15 +37,17 @@ struct PhotoLibraryImageView: View {
             .clipped()
             .contentShape(.rect)
             .onTapGesture {
-                viewModel.selectedImageId = imageId
                 if let loadedImage = loadedImage {
-                    viewModel.getImageDate(image: loadedImage)
+                    viewModel.handleOnTapImage(loadedImage, id: imageId)
                 }
             }
             .overlay {
-                if let id = viewModel.selectedImageId , id == imageId {
+                if viewModel.selectedImageIds.contains(imageId) {
                     Rectangle()
                         .stroke(._3_B_9678, lineWidth: 3)
+                }else {
+                    Rectangle()
+                        .stroke(.clear, lineWidth: 3)
                 }
             }
         }

@@ -256,7 +256,7 @@ extension SupaBaseFunctions {
     }
     func fetchServerTime() async throws -> String {
         let response = try await getSessionClient()
-            .rpc("get_server_time")
+            .rpc("get_formatted_server_time")
             .select()
             .single()
             .execute()

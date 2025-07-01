@@ -28,15 +28,16 @@ struct SelectPhotoView:View {
                 }label: {
                     Text("Next")
                         .customFont(.regular, size: 17)
-                        .foregroundStyle(viewModel.imageData == nil ? .gray : ._3_B_9678)
+                        .foregroundStyle(viewModel.imagesData.isEmpty ? .gray : ._3_B_9678)
                 }
-                .disabled(viewModel.imageData == nil)
+                .disabled(viewModel.imagesData.isEmpty)
             }
             .padding([.top,.horizontal])
+            ScrollView(showsIndicators: false){
+                AddPostGridView(images: viewModel.imageList)
+                    .environmentObject(viewModel)
+            }
         }
-        ScrollView(showsIndicators: false){
-            AddPostGridView(images: viewModel.imageList)
-                .environmentObject(viewModel)
-        }
+        .alert("Max Count is 5 Photos.", isPresented: $viewModel.showError, actions: {})
     }
 }

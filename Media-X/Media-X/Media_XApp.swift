@@ -13,13 +13,14 @@ struct Media_XApp: App {
     @StateObject var navigationStateManager = NavigationStateManager(selectionPath: [AppNavigationPath]())
     @StateObject var globalLoading = GlobalLoading()
     @StateObject var globalUser = GlobalUser()
-    
+    @StateObject var uploadPostVM = UploadPostViewModel()
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(navigationStateManager)
                 .environmentObject(globalLoading)
                 .environmentObject(globalUser)
+                .environmentObject(uploadPostVM)
         }
     }
 }
