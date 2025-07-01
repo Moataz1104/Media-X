@@ -69,6 +69,9 @@ class UploadPostViewModel : ObservableObject {
             }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                self.uploadingProgress = 0
+                self.totalProgress = 0
+                self.singleProgress = 0
                 self.isLoading = false
             }
             

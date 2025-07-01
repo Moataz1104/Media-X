@@ -45,6 +45,11 @@ struct ProfileView: View {
                 }
                 .padding(.vertical)
             }
+            .refreshable {
+                Task {
+                    await viewModel.fetchPosts(userId: self.userId)
+                }
+            }
         }
         .onAppear {
             Task {
@@ -62,6 +67,8 @@ struct ProfileView: View {
                         //                        viewModel.tempUserName = viewModel.username
                     }
                 }
+                
+                await viewModel.fetchPosts(userId: self.userId)
             }
         }
         .background(.white)
@@ -148,10 +155,10 @@ struct ProfileView: View {
             TabSelector()
             Divider()
             if viewModel.selectedTab == .photos {
-                ProfilePhotosGrid() {_ in
+                ProfilePhotosGrid(posts: viewModel.posts) {_ in
                 }
             } else {
-                ProfilePhotosGrid() { _ in
+                ProfilePhotosGrid(posts:[]) { _ in
                 }
             }
         }
@@ -342,24 +349,3 @@ struct ProfileView: View {
         
     }
 }
-
-struct ProfilePhotosGrid: View {
-    let onTapAction:(UUID)->()
-    var body: some View {
-        ScrollView {
-            LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: 1), count: 3), spacing: 1) {
-                ForEach(0..<20) { i in
-                    
-                    Image(.me)
-                        .resizable()
-                        .scaledToFit()
-                        .clipped()
-                }
-            }
-            .padding(.top, 2)
-            .padding(.bottom, 120)
-        }
-        .scrollIndicators(.hidden)
-    }
-}
-

@@ -8,6 +8,7 @@
 import Foundation
 
 protocol ProfileManagerProtocol : UserIDFetchable {
+    func fetchProfilePosts(userId:String)async throws -> [SBFetchedPost]
     
     
 }
@@ -16,5 +17,10 @@ protocol ProfileManagerProtocol : UserIDFetchable {
 
 
 class ProfileManager : SupaBaseFunctions, ProfileManagerProtocol {
+    
+    
+    func fetchProfilePosts(userId:String)async throws -> [SBFetchedPost] {
+        try await getProfilePosts(userId: userId)
+    }
     
 }

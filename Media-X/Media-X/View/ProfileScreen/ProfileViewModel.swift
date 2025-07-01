@@ -17,6 +17,7 @@ class ProfileViewModel : ObservableObject {
     @Published var username = ""
     @Published var imageId:String?
     @Published var userId:String?
+    @Published var posts:[SBFetchedPost] = []
     var tempUserName = ""
     var tempBio :String?
     var isMyProfile:Bool?
@@ -27,6 +28,17 @@ class ProfileViewModel : ObservableObject {
         manager = ProfileManager()
     }
     
+    @MainActor
+    func fetchPosts(userId:String) async{
+        
+        do {
+            let posts = try await manager.fetchProfilePosts(userId: userId)
+            self.posts = posts
+        }catch {
+            print(error.localizedDescription)
+        }
+        
+    }
     
     func isMyProfile(id:String) -> Bool {
         if let uid = UUID(uuidString: id), let userId = manager.getUserId() {

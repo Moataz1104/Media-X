@@ -45,6 +45,9 @@ protocol SupaBaseFunctions {
         columnName: String,
         filterValue: PostgrestFilterValue
     ) async throws -> Result<Int, Error>
+    
+    
+    func getProfilePosts(userId:String) async throws -> [SBFetchedPost]
 }
 
 extension SupaBaseFunctions {
@@ -263,5 +266,36 @@ extension SupaBaseFunctions {
         
         let timeString = try JSONDecoder().decode(String.self, from: response.data)
         return timeString
+    }
+    
+//    MARK: - supabase functions
+    
+    func getProfilePosts(userId:String) async throws -> [SBFetchedPost] {
+        let client = getSessionClient()
+        
+        let response = try await client
+            .rpc(
+                "get_profile_posts",
+                params: [
+                    "user_id_param": userId
+                ]
+            )
+            .execute()
+
+        
+        
+        if (200...299).contains(response.status) {
+            if response.data.isEmpty {
+                return []
+            }
+            let data = try JSONDecoder().decode([SBFetchedPost].self, from: response.data)
+            return data
+        } else {
+            let message = String(data: response.data, encoding: .utf8) ?? "Unknown error"
+            throw NSError(domain: "SupabaseError", code: response.status, userInfo: [
+                NSLocalizedDescriptionKey: "Failed to fetch recommended chapters: \(message)"
+            ])
+        }
+
     }
 }

@@ -11,6 +11,7 @@ struct CustomBarView: View {
     @Binding var selectedTab:Int
     @State private var showAlert = false
     @State private var showAddPostSheet = false
+    @EnvironmentObject var uploadPostVM : UploadPostViewModel
     var body: some View {
         
             HStack{
@@ -30,7 +31,9 @@ struct CustomBarView: View {
                 }
                 Spacer()
                 TabBarButtonView(selectedTab: $selectedTab,icon:.plusIcon, index: 2){
-                    showAddPostSheet = true
+                    if !uploadPostVM.isLoading{
+                        showAddPostSheet = true
+                    }
                 }
                 Spacer()
                 
