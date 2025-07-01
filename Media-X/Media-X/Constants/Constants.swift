@@ -21,6 +21,8 @@ struct Constants{
     static let USERS_TABLE = "users"
     static let POSTS_TABLE = "posts"
     static let POSTS_IMAGES_TABLE = "posts_images"
+    static let BOOKMAR_TABLE = "bookmarks"
+    static let EMOJIS_TABLE = "emojiss"
     //MARK: - Buckets
     static let USERS_IMAGES_BUCKET = "users.images"
     static let POSTS_IMAGES_BUCKET = "posts.images"

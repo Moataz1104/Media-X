@@ -26,6 +26,9 @@ struct ProfilePhotosGrid: View {
                             .scaledToFill()
                             .frame(width: width,height: width)
                             .clipped()
+                            .onTapGesture {
+                                onTapAction(post.postData.id)
+                            }
                     }
                 }
             }

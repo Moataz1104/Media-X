@@ -120,4 +120,37 @@ struct HelperFunctions {
             return nil
         }
     }
+    
+    
+
+    static func formatTimeString(from dateString: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss z"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        
+        guard let date = dateFormatter.date(from: dateString) else {
+            return dateString // Return original if parsing fails
+        }
+        
+        let now = Date()
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second],
+                                              from: date, to: now)
+        
+        if let year = components.year, year > 0 {
+            return "\(year)y"
+        } else if let month = components.month, month > 0 {
+            return "\(month)mo"
+        } else if let day = components.day, day > 0 {
+            return "\(day)d"
+        } else if let hour = components.hour, hour > 0 {
+            return "\(hour)h"
+        } else if let minute = components.minute, minute > 0 {
+            return "\(minute)m"
+        } else if let second = components.second, second > 5 {
+            return "\(second)s"
+        } else {
+            return "now"
+        }
+    }
 }

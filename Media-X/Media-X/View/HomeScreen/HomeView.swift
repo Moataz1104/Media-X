@@ -30,59 +30,8 @@ struct HomeView: View {
                         .padding()
                     }
                     
-                    VStack {
-                        
-                        VStack(alignment:.leading) {
-                            HStack {
-                                ImageBorderView()
-                                    .frame(width: 55)
-                                VStack(alignment:.leading) {
-                                    Text("Moataz Mohamed")
-                                        .customFont(.medium, size: 15)
-                                    
-                                    Text("16m")
-                                        .customFont(.regular, size: 12)
-                                        .foregroundStyle(.gray)
-                                }
-                            }
-                            
-                            Image(.me)
-                                .resizable()
-                                .scaledToFit()
-                                .clipShape(RoundedRectangle(cornerRadius: 16))
-                         
-                            
-                            HStack(spacing:20) {
-                                PostInteractionButton(icon: "heart", count: "300") {
-                                    
-                                }
-                                
-                                PostInteractionButton(icon: "bubble", count: "300") {
-                                    
-                                }
-                                
-                                PostInteractionButton(icon: "square.and.arrow.up", count: "30") {
-                                    
-                                }
-                                
-                                Spacer()
-                                PostInteractionButton(icon: "bookmark", count: "") {
-                                    
-                                }
-                                
-                            }
-                            
-                            Text("This is the post content")
-                                .customFont(.regular, size: 18)
-                                .foregroundStyle(.black)
-                        }
-                        .padding()
-                        .padding(.vertical,10)
-                        .background(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                        
-                    }
-                    .padding()
+//                    FeedsView()
+//                    .padding()
                     
                 }
             }

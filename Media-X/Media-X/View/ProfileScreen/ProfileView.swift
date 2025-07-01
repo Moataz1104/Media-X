@@ -12,43 +12,49 @@ struct ProfileView: View {
     @EnvironmentObject var globalUser:GlobalUser
     @Environment(\.dismiss) var dismiss
     @Namespace private var tabAnimation
-    
+    @State private var onTapId :UUID?
     @FocusState private var isUsernameFieldFocused: Bool
     
     @StateObject private var viewModel = ProfileViewModel()
     @State var userId:String
     var body: some View {
-        VStack {
-            HStack {
-                Button {
-                    dismiss()
-                }label: {
-                    Image(systemName: "chevron.left")
-                        .customFont(.bold, size: 20)
-                        .foregroundStyle(._3_B_9678)
+        ZStack {
+            VStack {
+                HStack {
+                    Button {
+                        dismiss()
+                    }label: {
+                        Image(systemName: "chevron.left")
+                            .customFont(.bold, size: 20)
+                            .foregroundStyle(._3_B_9678)
+                    }
+                    
+                    Spacer()
+                    
+                    
                 }
+                .padding([.top,.horizontal])
                 
-                Spacer()
-                
-                
+                ScrollView(showsIndicators: false) {
+                    VStack {
+                        headerView()
+                            .padding(.horizontal)
+                        
+                        TabView()
+                        
+                        
+                    }
+                    .padding(.vertical)
+                }
+                .refreshable {
+                    Task {
+                        await viewModel.fetchPosts(userId: self.userId)
+                    }
+                }
             }
-            .padding([.top,.horizontal])
-            
-            ScrollView(showsIndicators: false) {
-                VStack {
-                    headerView()
-                        .padding(.horizontal)
-                    
-                    TabView()
-                    
-                    
-                }
-                .padding(.vertical)
-            }
-            .refreshable {
-                Task {
-                    await viewModel.fetchPosts(userId: self.userId)
-                }
+            if let _ = onTapId {
+                ProfileFeedsView(scrollId: $onTapId, posts: viewModel.posts)
+                    .transition(.asymmetric(insertion: .opacity, removal: .opacity))
             }
         }
         .onAppear {
@@ -155,7 +161,10 @@ struct ProfileView: View {
             TabSelector()
             Divider()
             if viewModel.selectedTab == .photos {
-                ProfilePhotosGrid(posts: viewModel.posts) {_ in
+                ProfilePhotosGrid(posts: viewModel.posts) {id in
+                    withAnimation {
+                        self.onTapId = id
+                    }
                 }
             } else {
                 ProfilePhotosGrid(posts:[]) { _ in
