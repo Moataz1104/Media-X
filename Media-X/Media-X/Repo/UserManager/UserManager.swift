@@ -7,16 +7,18 @@
 
 import Foundation
 
-protocol UserManagerProtocol:UserIDFetchable {
+
+protocol UserManagerProtocol:UserIDFetchable , UserUpdateHandler {
     
     func uploadUser(model:SBUserModel) async throws -> Result<Void, any Error>
     func deleteUserImage(fileName:String,filePath: String) async throws -> Bool
     func uploadUserImage(imageData:Data,filePath:String) async throws -> Result<String, any Error>
-    func updateUser(model:SBUserModel)async throws -> Result<SBUserModel?, any Error>
     
 }
 
-
+protocol UserUpdateHandler {
+    func updateUser(model: SBUserModel) async throws -> Result<SBUserModel?, any Error>
+}
 
 class UserManager : UserManagerProtocol , SupaBaseFunctions {
     

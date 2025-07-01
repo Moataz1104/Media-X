@@ -10,6 +10,7 @@ import SwiftUI
 struct TabBarView: View {
     
     @EnvironmentObject var globalLoading : GlobalLoading
+    @EnvironmentObject var globalUser : GlobalUser
     @State private var selectedTab = 0
     @EnvironmentObject var uploadPostVM : UploadPostViewModel
     @State private var progressWidth : Double = 0.0
@@ -34,8 +35,8 @@ struct TabBarView: View {
                             Color
                                 .blue
                         case 4 :
-                            Color
-                                .blue
+                            ProfileView(userId:globalUser.user?.id.uuidString ?? "")
+                                .padding(.top,60)
                         default:
                             Text("error")
                         }
