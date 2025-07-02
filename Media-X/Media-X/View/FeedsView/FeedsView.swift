@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct FeedsView: View {
+    @EnvironmentObject var globalUser:GlobalUser
     @Binding var posts:[SBFetchedPost]
     let getNextPostsAction: () -> ()
     
+    @State private var showComments: Bool = false
+    @State private var ontapPostId:UUID?
     @StateObject private var viewModel = InterActionsViewModel()
     var body: some View {
         LazyVStack{
@@ -28,7 +31,8 @@ struct FeedsView: View {
                         }
                     }
                 }commentAction: {
-                    
+                    ontapPostId = posts[index].postData.id
+                    showComments = true
                 }
                 .onAppear {
                     if index >= self.posts.count-3 {
@@ -36,6 +40,10 @@ struct FeedsView: View {
                     }
                 }
             }
+        }
+        .sheet(isPresented: $showComments,onDismiss: {self.ontapPostId = nil}) {
+            CommentsSheet(
+                postId: ontapPostId ?? UUID())
         }
     }
 }

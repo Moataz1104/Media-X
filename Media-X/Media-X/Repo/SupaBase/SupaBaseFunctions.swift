@@ -405,6 +405,31 @@ extension SupaBaseFunctions {
         }
 
     }
+    
+    func fetchComments(userId: UUID, postId: UUID) async throws -> [SBFetchedComment] {
+        let client = getSessionClient()
+        
+        let response = try await client
+            .rpc(
+                "get_post_comments",
+                params: [
+                    "p_post_id": postId,
+                    "p_current_user_id": userId
+                ]
+            )
+            .execute()
+
+
+        if (200...299).contains(response.status) {
+            let data = try JSONDecoder().decode([SBFetchedComment].self, from: response.data)
+            return data
+        } else {
+            let message = String(data: response.data, encoding: .utf8) ?? "Unknown error"
+            throw NSError(domain: "SupabaseError", code: response.status, userInfo: [
+                NSLocalizedDescriptionKey: "Failed to fetch recommended chapters: \(message)"
+            ])
+        }
+    }
 }
 
 

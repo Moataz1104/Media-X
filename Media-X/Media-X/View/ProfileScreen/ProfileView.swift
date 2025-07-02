@@ -17,6 +17,7 @@ struct ProfileView: View {
     
     @StateObject private var viewModel = ProfileViewModel()
     @State var userId:String
+    @State private var posts:[SBFetchedPost] = []
     var body: some View {
         ZStack {
             VStack {
@@ -53,8 +54,7 @@ struct ProfileView: View {
                 }
             }
             if let _ = onTapId  {
-                let posts = viewModel.selectedTab == .photos ? viewModel.posts : viewModel.bookmarks
-                ProfileFeedsView(scrollId: $onTapId, posts: posts)
+                ProfileFeedsView(scrollId: $onTapId, posts: $posts)
                     .transition(.asymmetric(insertion: .opacity, removal: .opacity))
             }
         }
@@ -165,12 +165,14 @@ struct ProfileView: View {
                 ProfilePhotosGrid(posts: viewModel.posts) {id in
                     withAnimation {
                         self.onTapId = id
+                        posts = viewModel.selectedTab == .photos ? viewModel.posts : viewModel.bookmarks
                     }
                 }
             } else {
                 ProfilePhotosGrid(posts:viewModel.bookmarks) { id in
                     withAnimation {
                         self.onTapId = id
+                        posts = viewModel.selectedTab == .photos ? viewModel.posts : viewModel.bookmarks
                     }
                 }
             }

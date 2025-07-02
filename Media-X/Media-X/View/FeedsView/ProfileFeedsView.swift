@@ -12,7 +12,10 @@ struct ProfileFeedsView:View {
     @State private var offset: CGSize = .zero
     @State private var opacity: Double = 1.0
 
-    let posts:[SBFetchedPost]
+    @Binding var posts:[SBFetchedPost]
+    @StateObject private var viewModel = InterActionsViewModel()
+    @State private var ontapPostId:UUID?
+    @State private var showComments: Bool = false
     var body: some View {
         VStack {
             HStack {
@@ -23,7 +26,11 @@ struct ProfileFeedsView:View {
                 }label: {
                     Image(systemName: "xmark")
                         .foregroundColor(._3_B_9678)
-                    
+                        .onChange(of: ontapPostId) { oldValue, newValue in
+                            print("oldValue: \(oldValue)")
+                            print("newValue: \(newValue)")
+                            print("showComments: \(showComments)")
+                        }
                 }
                 Spacer()
             }
@@ -31,15 +38,24 @@ struct ProfileFeedsView:View {
             ScrollViewReader { proxy in
                 ScrollView(showsIndicators: false) {
                     VStack(spacing:15) {
-                        ForEach(posts,id:\.postData.id) { post in
-                            PostCellView(post: post){
-                                
+                        ForEach(0..<posts.count,id:\.self) { index in
+                            PostCellView(post: posts[index]) {
+                                viewModel.handleLove(post: posts[index]) { newModel in
+                                    DispatchQueue.main.async {
+                                        posts[index] = newModel
+                                    }
+                                }
                             }bookmarkAction: {
-                                
+                                viewModel.handleBookmark(post:posts[index]) { newModel in
+                                    DispatchQueue.main.async {
+                                        posts[index] = newModel
+                                    }
+                                }
                             }commentAction: {
-                                
+                                ontapPostId = posts[index].postData.id
+                                showComments = true
                             }
-                                .id(post.postData.id)
+                            .id(posts[index].postData.id)
                                 
                         }
                     }
@@ -72,8 +88,14 @@ struct ProfileFeedsView:View {
             )
         }
         .background(.F_6_F_8_FA)
-        
-
         .opacity(opacity)
+        .sheet(isPresented: $showComments, onDismiss: { ontapPostId = nil }) {
+            if let id = ontapPostId {
+                CommentsSheet(postId: id)
+            } else {
+                EmptyView()
+            }
+        }
+
     }
 }

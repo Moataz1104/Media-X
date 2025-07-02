@@ -96,17 +96,7 @@ extension InterActionsViewModel {
     }
     
     
-    private func addCommentLove(commentId:UUID) async throws{
-        guard let userId = manager.getUserId() else { return }
-        let model = SBCommentLove(id: UUID(), commentId: commentId, userId: userId)
-        let result = try await manager.addCommentLove(model: model)
-        switch result {
-        case .success(_):
-            print("addCommentLove success")
-        case .failure(let failure):
-            throw failure
-        }
-    }
+    
     
     
     private func removeLove(postId:UUID) async throws{
@@ -135,39 +125,6 @@ extension InterActionsViewModel {
             throw failure
         }
         
-    }
-    
-    private func removeCommentLove(commentId:UUID) async throws{
-        guard let userId = manager.getUserId() else { return }
-        
-        let result = try await manager.removeCommentLove(userId: userId, commentId: commentId)
-        switch result {
-        case .success(_):
-            print("removeCommentLove success")
-        case .failure(let failure):
-            throw failure
-        }
-        
-    }
-    
-    func addComment(postId:UUID){
-        guard let userId = manager.getUserId() else { return }
-        Task {
-            do {
-                let date = try await manager.fetchServerTime()
-                let model = SBComment(id: UUID(), comment: commentInput, userId: userId, postId: postId, dateString: date)
-
-                let result = try await manager.addComment(model: model)
-                switch result {
-                case .success(_):
-                    print("addComment success")
-                case .failure(let failure):
-                    print(failure.localizedDescription)
-                }
-            }catch {
-                print(error.localizedDescription)
-            }
-        }
     }
 
 }

@@ -20,7 +20,7 @@ class HomeViewModel :ObservableObject{
         manager = FeedsManager()
     }
     
-    func resetPosts() {
+    func reFreshPosts() {
         page = 0
         posts = []
         fetchPosts()

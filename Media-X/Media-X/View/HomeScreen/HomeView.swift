@@ -37,6 +37,9 @@ struct HomeView: View {
                     .padding()
                     
                 }
+                .refreshable {
+                    viewModel.reFreshPosts()
+                }
             }
             
             

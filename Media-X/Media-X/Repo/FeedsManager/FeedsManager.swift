@@ -15,14 +15,27 @@ protocol PostsFetchingProtocol:UserIDFetchable{
 protocol PostInteractionsProtocol:UserIDFetchable{
     func addLove(model:SBEmoji) async throws -> Result<Void, any Error>
     func addBookmark(model:SBBookmark) async throws -> Result<Void, any Error>
-    func addComment(model:SBComment) async throws -> Result<Void, any Error>
-    func addCommentLove(model:SBCommentLove) async throws -> Result<Void, any Error>
+    
     func removeLove(userId:UUID,postId:UUID) async throws -> Result<Void, any Error>
     func removeBookmark(userId:UUID,postId:UUID) async throws -> Result<Void, any Error>
-    func removeCommentLove(userId:UUID,commentId:UUID) async throws -> Result<Void, any Error>
+    
 }
 
-class FeedsManager :PostsFetchingProtocol,PostInteractionsProtocol,SupaBaseFunctions {
+protocol CommentProtocol:UserIDFetchable {
+    
+    func addComment(model:SBComment) async throws -> Result<Void, any Error>
+    func addCommentLove(model:SBCommentLove) async throws -> Result<Void, any Error>
+    func removeCommentLove(userId:UUID,commentId:UUID) async throws -> Result<Void, any Error>
+    func fetchAllComments( userId:UUID,postId:UUID) async throws -> [SBFetchedComment]
+}
+
+
+class FeedsManager :PostsFetchingProtocol,PostInteractionsProtocol,SupaBaseFunctions ,CommentProtocol{
+    
+    
+    func fetchAllComments( userId:UUID,postId:UUID) async throws -> [SBFetchedComment]{
+        try await fetchComments(userId: userId, postId: postId)
+    }
     
     func fetchPostsPagenated(userId:String,page:String) async throws -> [SBFetchedPost]{
         try await getPostsPagenated(userId: userId, pageNumber: page)
