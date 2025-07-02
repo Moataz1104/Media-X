@@ -10,6 +10,7 @@ import SwiftUI
 struct PostInteractionButton:View {
     let icon:String
     let count:String
+    let color:Color
     let action:()->()
     var body: some View {
         Button {
@@ -17,8 +18,8 @@ struct PostInteractionButton:View {
         }label: {
             HStack {
                 Image(systemName: icon)
-                    .customFont(.medium, size: 20)
-                    .foregroundStyle(.black)
+                    .customFont(.medium, size: 25)
+                    .foregroundStyle(color)
                 
                 Text(count)
                     .customFont(.regular, size: 15)

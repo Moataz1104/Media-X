@@ -7,14 +7,35 @@
 
 import SwiftUI
 
-
-
-
 struct FeedsView: View {
-    let posts:[SBFetchedPost]
+    @Binding var posts:[SBFetchedPost]
+    let getNextPostsAction: () -> ()
+    
+    @StateObject private var viewModel = InterActionsViewModel()
     var body: some View {
-        ForEach(posts,id:\.postData.id) { post in
-            PostCellView(post: post)
+        LazyVStack{
+            ForEach(0..<posts.count,id:\.self) { index in
+                PostCellView(post: posts[index]) {
+                    viewModel.handleLove(post: posts[index]) { newModel in
+                        DispatchQueue.main.async {
+                            posts[index] = newModel
+                        }
+                    }
+                }bookmarkAction: {
+                    viewModel.handleBookmark(post:posts[index]) { newModel in
+                        DispatchQueue.main.async {
+                            posts[index] = newModel
+                        }
+                    }
+                }commentAction: {
+                    
+                }
+                .onAppear {
+                    if index >= self.posts.count-3 {
+                        self.getNextPostsAction()
+                    }
+                }
+            }
         }
     }
 }

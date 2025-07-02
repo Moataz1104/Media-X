@@ -12,6 +12,7 @@ struct UserFormView: View {
     @State private var showPicker: Bool = false
     @EnvironmentObject var globalUser:GlobalUser
     @EnvironmentObject var navigationStateManager: NavigationStateManager<AppNavigationPath>
+    @EnvironmentObject var homeVM:HomeViewModel
     var body: some View {
         ZStack {
             VStack {
@@ -87,6 +88,7 @@ struct UserFormView: View {
             if let user = user {
                 globalUser.user = user
                 navigationStateManager.pushToStage(stage: .tabBar)
+                homeVM.fetchPosts()
             }
         })
         .dismissKeyboardOnTap()

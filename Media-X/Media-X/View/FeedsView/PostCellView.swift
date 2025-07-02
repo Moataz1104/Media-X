@@ -6,11 +6,15 @@
 //
 
 import SwiftUI
-
 import Kingfisher
+
 struct PostCellView:View {
     @State private var imageIndex:Int = 0
     let post:SBFetchedPost
+    let loveAction:()->Void
+    let bookmarkAction:()->Void
+    let commentAction:()->Void
+    
     var body: some View {
         VStack {
             VStack(alignment:.leading) {
@@ -49,13 +53,13 @@ struct PostCellView:View {
                     
              
                 
-                HStack(spacing:20) {
-                    PostInteractionButton(icon: "heart", count: "300") {
-                        
+                HStack(spacing:10) {
+                    PostInteractionButton(icon:post.emojiId == nil ? "heart" : "heart.fill", count: "\(post.lovesCount)", color:post.emojiId == nil ? .black:.red) {
+                        loveAction()
                     }
                     
-                    PostInteractionButton(icon: "bubble", count: "300") {
-                        
+                    PostInteractionButton(icon: "message", count: "\(post.commentsCount)", color: .black) {
+                        commentAction()
                     }
                     
 //                    PostInteractionButton(icon: "square.and.arrow.up", count: "30") {
@@ -63,8 +67,8 @@ struct PostCellView:View {
 //                    }
                     
                     Spacer()
-                    PostInteractionButton(icon: "bookmark", count: "") {
-                        
+                    PostInteractionButton(icon:post.bookmarkId == nil ? "bookmark":"bookmark.fill", count: "", color:post.bookmarkId == nil ? .black:.blue) {
+                        bookmarkAction()
                     }
                     
                 }

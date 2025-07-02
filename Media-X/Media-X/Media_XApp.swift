@@ -14,6 +14,7 @@ struct Media_XApp: App {
     @StateObject var globalLoading = GlobalLoading()
     @StateObject var globalUser = GlobalUser()
     @StateObject var uploadPostVM = UploadPostViewModel()
+    @StateObject private var homeVM = HomeViewModel()
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -21,6 +22,7 @@ struct Media_XApp: App {
                 .environmentObject(globalLoading)
                 .environmentObject(globalUser)
                 .environmentObject(uploadPostVM)
+                .environmentObject(homeVM)
         }
     }
 }
@@ -28,10 +30,12 @@ struct Media_XApp: App {
 struct ContentView: View {
     @EnvironmentObject var navigationStateManager: NavigationStateManager<AppNavigationPath>
     @EnvironmentObject var globalUser : GlobalUser
+    @EnvironmentObject var homeVM : HomeViewModel
     var body: some View {
         NavigationStack(path: $navigationStateManager.selectionPath) {
             StartView(){userData in
                 globalUser.user = userData
+                homeVM.fetchPosts()
             }
             .navigationDestination(for: AppNavigationPath.self) { path in
                 switch path {

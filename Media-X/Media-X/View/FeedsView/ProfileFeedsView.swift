@@ -32,7 +32,13 @@ struct ProfileFeedsView:View {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing:15) {
                         ForEach(posts,id:\.postData.id) { post in
-                            PostCellView(post: post)
+                            PostCellView(post: post){
+                                
+                            }bookmarkAction: {
+                                
+                            }commentAction: {
+                                
+                            }
                                 .id(post.postData.id)
                                 
                         }

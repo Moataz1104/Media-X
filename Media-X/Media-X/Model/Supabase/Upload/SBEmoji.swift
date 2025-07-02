@@ -17,12 +17,10 @@ struct SBEmoji :SupabaseUploadable{
     var id:UUID
     var postId:UUID
     var userId:UUID
-    var emoji:String
     
     enum CodingKeys : String, CodingKey {
         case id
         case postId = "post_id"
         case userId = "user_id"
-        case emoji
     }
 }

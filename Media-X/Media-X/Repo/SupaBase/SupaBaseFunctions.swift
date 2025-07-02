@@ -49,6 +49,15 @@ protocol SupaBaseFunctions {
     
     func getProfilePosts(userId:String) async throws -> [SBFetchedPost]
     func getMyBookmarks(userId:String) async throws -> [SBFetchedPost]
+    func deleteModel(
+        column1Name: String,
+        column1Value: Any,
+        column2Name: String,
+        column2Value: Any,
+        tableName: String
+    ) async throws -> Result<Void, Error>
+    
+    func getPostsPagenated(userId:String,pageNumber:String) async throws -> [SBFetchedPost] 
 }
 
 extension SupaBaseFunctions {
@@ -167,6 +176,42 @@ extension SupaBaseFunctions {
         
         if (200...299).contains(response.status) {
             print("contains(response.status")
+            return .success(())
+        } else {
+            return .failure(NSError(
+                domain: "SupabaseError",
+                code: Int(response.status),
+                userInfo: [NSLocalizedDescriptionKey: "Failed to delete data"]
+            ))
+        }
+    }
+    func deleteModel(
+        column1Name: String,
+        column1Value: Any,
+        column2Name: String,
+        column2Value: Any,
+        tableName: String
+    ) async throws -> Result<Void, Error> {
+        // Convert to filter values
+        guard let col1Filter = column1Value as? PostgrestFilterValue,
+              let col2Filter = column2Value as? PostgrestFilterValue else {
+            return .failure(NSError(
+                domain: "SupabaseError",
+                code: 400,
+                userInfo: [NSLocalizedDescriptionKey: "Invalid filter values"]
+            ))
+        }
+        
+        let response = try await getSessionClient()
+            .from(tableName)
+            .delete()
+            .eq(column1Name, value: col1Filter)
+            .eq(column2Name, value: col2Filter)
+            .select("*")
+            .execute()
+        
+        // Handle response
+        if (200...299).contains(response.status) {
             return .success(())
         } else {
             return .failure(NSError(
@@ -328,4 +373,38 @@ extension SupaBaseFunctions {
         }
 
     }
+    
+    func getPostsPagenated(userId:String,pageNumber:String) async throws -> [SBFetchedPost] {
+        let client = getSessionClient()
+        
+        let response = try await client
+            .rpc(
+                "get_random_paginated_posts",
+                params: [
+                    "current_user_id": userId,
+                    "page_number" : pageNumber,
+                    "page_size" : "10"
+                ]
+            )
+            .execute()
+        
+//        if let s = String(data: response.data, encoding: .utf8) {
+//            print(s)
+//        }
+        if (200...299).contains(response.status) {
+            if response.data.isEmpty {
+                return []
+            }
+            let data = try JSONDecoder().decode([SBFetchedPost].self, from: response.data)
+            return data
+        } else {
+            let message = String(data: response.data, encoding: .utf8) ?? "Unknown error"
+            throw NSError(domain: "SupabaseError", code: response.status, userInfo: [
+                NSLocalizedDescriptionKey: "Failed to fetch recommended chapters: \(message)"
+            ])
+        }
+
+    }
 }
+
+

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    @EnvironmentObject var viewModel : HomeViewModel
     var body: some View {
         ZStack {
             BackGroundColorView()
@@ -30,8 +31,10 @@ struct HomeView: View {
                         .padding()
                     }
                     
-//                    FeedsView()
-//                    .padding()
+                    FeedsView(posts: $viewModel.posts) {
+                        viewModel.fetchPosts()
+                    }
+                    .padding()
                     
                 }
             }
