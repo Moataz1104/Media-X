@@ -18,6 +18,7 @@ struct ProfileView: View {
     @StateObject private var viewModel = ProfileViewModel()
     @State var userId:String
     @State private var posts:[SBFetchedPost] = []
+    @State var showBackButton:Bool = true
     var body: some View {
         ZStack {
             VStack {
@@ -25,17 +26,20 @@ struct ProfileView: View {
                     Button {
                         dismiss()
                     }label: {
-                        Image(systemName: "chevron.left")
-                            .customFont(.bold, size: 20)
-                            .foregroundStyle(._3_B_9678)
+                        if showBackButton {
+                            Image(systemName: "chevron.left")
+                                .customFont(.bold, size: 20)
+                                .foregroundStyle(._3_B_9678)
+                        }else {
+                            Image(systemName: "chevron.left")
+                                .customFont(.bold, size: 20)
+                                .foregroundStyle(._3_B_9678)
+                                .hidden()
+                        }
                     }
-                    
+                    .padding([.top,.horizontal])
                     Spacer()
-                    
-                    
                 }
-                .padding([.top,.horizontal])
-                
                 ScrollView(showsIndicators: false) {
                     VStack {
                         headerView()
@@ -68,10 +72,10 @@ struct ProfileView: View {
                         viewModel.imageId = globalUser.user?.imageId ?? ""
                         viewModel.tempUserName = viewModel.username
                     }else {
-                        //                        let user = try await viewModel.getUserData(userId: uid)
-                        //                        viewModel.username = user?.name ?? ""
-                        //                        viewModel.imageId = user?.imageId
-                        //                        viewModel.tempUserName = viewModel.username
+                        let user = try await viewModel.getUserData(userId: uid)
+                        viewModel.username = user?.name ?? ""
+                        viewModel.imageId = user?.imageId
+                        viewModel.tempUserName = viewModel.username
                     }
                 }
                 
@@ -159,8 +163,24 @@ struct ProfileView: View {
     @ViewBuilder
     private func TabView() -> some View {
         VStack(spacing: 0) {
-            TabSelector()
-            Divider()
+            if let isMyProfile = viewModel.isMyProfile,isMyProfile {
+                TabSelector()
+                Divider()
+            }else {
+                if let isFollower = viewModel.isFollower {
+                    Button {
+                        viewModel.handleFollow(userId: self.userId)
+                    }label: {
+                        Text(isFollower ? "Following": "Follow")
+                            .foregroundStyle(.white)
+                            .padding(.vertical,10)
+                            .frame(width: 150)
+                            .background(isFollower ? .gray:._3_B_9678)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .padding(.bottom)
+                    }
+                }
+            }
             if viewModel.selectedTab == .photos {
                 ProfilePhotosGrid(posts: viewModel.posts) {id in
                     withAnimation {
@@ -307,22 +327,23 @@ struct ProfileView: View {
                                     }
                                 }
                             }else {
-                                
-                                HStack {
-                                    Button {
-                                        withAnimation{
-                                            viewModel.isEditingProfile = true
+                                if let isMyProfile = viewModel.isMyProfile, isMyProfile {
+                                    HStack {
+                                        Button {
+                                            withAnimation{
+                                                viewModel.isEditingProfile = true
+                                            }
+                                        }label: {
+                                            Text("Edit")
+                                                .customFont(.medium, size: 20)
+                                                .foregroundStyle(.white)
+                                                .padding(.horizontal,10)
+                                                .frame(height: 35)
+                                                .background(._3_B_9678)
+                                                .clipShape(RoundedRectangle(cornerRadius: 300))
                                         }
-                                    }label: {
-                                        Text("Edit")
-                                            .customFont(.medium, size: 20)
-                                            .foregroundStyle(.white)
-                                            .padding(.horizontal,10)
-                                            .frame(height: 35)
-                                            .background(._3_B_9678)
-                                            .clipShape(RoundedRectangle(cornerRadius: 300))
+                                        
                                     }
-                                    
                                 }
                             }
                             

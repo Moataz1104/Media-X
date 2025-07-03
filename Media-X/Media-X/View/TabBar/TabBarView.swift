@@ -35,7 +35,7 @@ struct TabBarView: View {
                             Color
                                 .blue
                         case 4 :
-                            ProfileView(userId:globalUser.user?.id.uuidString ?? "")
+                            ProfileView(userId:globalUser.user?.id.uuidString ?? "",showBackButton:false)
                                 .padding(.top,60)
                         default:
                             Text("error")

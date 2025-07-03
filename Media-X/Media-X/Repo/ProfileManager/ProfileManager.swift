@@ -8,17 +8,50 @@
 import Foundation
 
 protocol ProfileManagerProtocol : UserIDFetchable {
-    func fetchProfilePosts(userId:String)async throws -> [SBFetchedPost]
+    func fetchProfilePosts(userId:String,currentUserId:String)async throws -> [SBFetchedPost]
     func fetchFollowersCount(userId:UUID)async throws -> Result<Int, any Error>
     func fetchFollowingCount(userId:UUID)async throws -> Result<Int, any Error>
     func fetchPostsCount(userId:UUID)async throws -> Result<Int, any Error>
     func getBookmarks(userId:String) async throws -> [SBFetchedPost]
+    func fetchUserData(userId:UUID) async throws -> Result<[SBUserModel], any Error>
+    func fetchFollowState(myId:UUID,otherUserId:UUID)async throws -> Result<[SBFollower], any Error>
+    func follow(model:SBFollower) async throws -> Result<Void, any Error>
+    func unFollow(myId:UUID,otherUserId:UUID) async throws -> Result<Void, any Error>
 }
 
 
 
 
 class ProfileManager : SupaBaseFunctions, ProfileManagerProtocol {
+    
+    
+    func follow(model:SBFollower) async throws -> Result<Void, any Error>{
+        try await uploadModel(model)
+    }
+    
+    func unFollow(myId:UUID,otherUserId:UUID) async throws -> Result<Void, any Error>{
+        try await deleteModel(
+            column1Name: "follower",
+            column1Value: myId,
+            column2Name: "following",
+            column2Value: otherUserId,
+            tableName: Constants.FOLLOWERS_TABLE
+        )
+    }
+    
+    
+    func fetchFollowState(myId:UUID,otherUserId:UUID)async throws -> Result<[SBFollower], any Error>  {
+        try await fetchModelByTwoFilters(
+            filter1: myId,
+            filter2: otherUserId,
+            columnName1: "follower",
+            columnName2: "following"
+        )
+    }
+    
+    func fetchUserData(userId:UUID) async throws -> Result<[SBUserModel], any Error> {
+        try await fetchModelById(id: userId, culomnIdName: "id")
+    }
     
     func getBookmarks(userId:String) async throws -> [SBFetchedPost] {
         try await getMyBookmarks(userId: userId)
@@ -37,8 +70,8 @@ class ProfileManager : SupaBaseFunctions, ProfileManagerProtocol {
     }
     
     
-    func fetchProfilePosts(userId:String)async throws -> [SBFetchedPost] {
-        try await getProfilePosts(userId: userId)
+    func fetchProfilePosts(userId:String,currentUserId:String)async throws -> [SBFetchedPost] {
+        try await getProfilePosts(userId: userId, currentUserId: currentUserId)
     }
     
 }

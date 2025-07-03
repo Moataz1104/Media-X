@@ -6,10 +6,14 @@
 //
 
 import SwiftUI
-
+import Kingfisher
 struct ImageBorderView:View {
+    let imageUrl:URL
     var body: some View {
-        Image(.me)
+        KFImage(imageUrl)
+            .placeholder {
+                ProgressView()
+            }
             .resizable()
             .scaledToFill()
             .clipShape(Circle())
@@ -21,6 +25,5 @@ struct ImageBorderView:View {
                             .stroke(._3_B_9678, lineWidth: 3)
                     }
             }
-
     }
 }

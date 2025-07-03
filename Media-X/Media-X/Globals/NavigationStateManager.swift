@@ -32,9 +32,13 @@ enum AppNavigationPath: Hashable {
     case tabBar
     case register
     case userForm
+    case profileView(id:String)
 }
 
 
 enum AddPostNavigationPath: Hashable {
     case addCaption
+    
 }
+
+

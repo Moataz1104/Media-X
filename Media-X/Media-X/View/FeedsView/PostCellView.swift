@@ -9,6 +9,7 @@ import SwiftUI
 import Kingfisher
 
 struct PostCellView:View {
+    @EnvironmentObject var navigationStateManager: NavigationStateManager<AppNavigationPath>
     @State private var imageIndex:Int = 0
     let post:SBFetchedPost
     let loveAction:()->Void
@@ -19,8 +20,10 @@ struct PostCellView:View {
         VStack {
             VStack(alignment:.leading) {
                 HStack {
-                    ImageBorderView()
-                        .frame(width: 55)
+                    if let url = URL(string: "\(Constants.SUPABASE_STORAGE_END_POINT)\(post.userImage)") {
+                        ImageBorderView(imageUrl: url)
+                            .frame(width: 80)
+                    }
                     VStack(alignment:.leading) {
                         Text(post.userName)
                             .customFont(.medium, size: 15)
@@ -29,6 +32,9 @@ struct PostCellView:View {
                             .customFont(.regular, size: 12)
                             .foregroundStyle(.gray)
                     }
+                }
+                .onTapGesture {
+                    navigationStateManager.pushToStage(stage: .profileView(id: post.postData.userId.uuidString))
                 }
                 
                 TabView(selection: $imageIndex) {

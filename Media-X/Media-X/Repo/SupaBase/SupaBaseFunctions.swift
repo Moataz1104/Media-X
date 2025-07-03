@@ -47,7 +47,7 @@ protocol SupaBaseFunctions {
     ) async throws -> Result<Int, Error>
     
     
-    func getProfilePosts(userId:String) async throws -> [SBFetchedPost]
+    func getProfilePosts(userId:String,currentUserId:String) async throws -> [SBFetchedPost]
     func getMyBookmarks(userId:String) async throws -> [SBFetchedPost]
     func deleteModel(
         column1Name: String,
@@ -316,14 +316,15 @@ extension SupaBaseFunctions {
     
 //    MARK: - supabase functions
     
-    func getProfilePosts(userId:String) async throws -> [SBFetchedPost] {
+    func getProfilePosts(userId:String,currentUserId:String) async throws -> [SBFetchedPost] {
         let client = getSessionClient()
         
         let response = try await client
             .rpc(
                 "get_profile_posts",
                 params: [
-                    "user_id_param": userId
+                    "user_id_param": userId,
+                    "current_user_id" : currentUserId
                 ]
             )
             .execute()

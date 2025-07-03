@@ -45,6 +45,8 @@ struct ContentView: View {
                     RegisterView()
                 case .userForm:
                     UserFormView()
+                case .profileView(let id) :
+                    ProfileView(userId: id)
                 }
             }
             .onAppear {
