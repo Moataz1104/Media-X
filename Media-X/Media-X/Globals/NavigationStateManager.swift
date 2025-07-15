@@ -33,6 +33,7 @@ enum AppNavigationPath: Hashable {
     case register
     case userForm
     case profileView(id:String)
+    case followersScreen(FollowersScreenState,String)
 }
 
 

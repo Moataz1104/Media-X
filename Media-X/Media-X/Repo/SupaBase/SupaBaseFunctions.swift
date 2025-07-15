@@ -57,7 +57,9 @@ protocol SupaBaseFunctions {
         tableName: String
     ) async throws -> Result<Void, Error>
     
-    func getPostsPagenated(userId:String,pageNumber:String) async throws -> [SBFetchedPost] 
+    func getPostsPagenated(userId:String,pageNumber:String) async throws -> [SBFetchedPost]
+    func getUserFollowers(userId: UUID,my_id:UUID) async throws -> [SBUserModel]
+    func getUserFollowings(userId: UUID,my_id:UUID) async throws -> [SBUserModel]
 }
 
 extension SupaBaseFunctions {
@@ -423,6 +425,59 @@ extension SupaBaseFunctions {
 
         if (200...299).contains(response.status) {
             let data = try JSONDecoder().decode([SBFetchedComment].self, from: response.data)
+            return data
+        } else {
+            let message = String(data: response.data, encoding: .utf8) ?? "Unknown error"
+            throw NSError(domain: "SupabaseError", code: response.status, userInfo: [
+                NSLocalizedDescriptionKey: "Failed to fetch recommended chapters: \(message)"
+            ])
+        }
+    }
+    
+    
+    
+    func getUserFollowers(userId: UUID,my_id:UUID) async throws -> [SBUserModel] {
+        let client = getSessionClient()
+        
+        let response = try await client
+            .rpc(
+                "get_user_followers",
+                params: [
+                    "current_user_id": userId,
+                    "my_id" : my_id
+                ]
+            )
+            .execute()
+
+
+        if (200...299).contains(response.status) {
+            let data = try JSONDecoder().decode([SBUserModel].self, from: response.data)
+            return data
+        } else {
+            let message = String(data: response.data, encoding: .utf8) ?? "Unknown error"
+            throw NSError(domain: "SupabaseError", code: response.status, userInfo: [
+                NSLocalizedDescriptionKey: "Failed to fetch recommended chapters: \(message)"
+            ])
+        }
+    }
+    
+    
+    func getUserFollowings(userId: UUID,my_id:UUID) async throws -> [SBUserModel] {
+        let client = getSessionClient()
+        
+        let response = try await client
+            .rpc(
+                "get_user_followings",
+                params: [
+                    "current_user_id": userId,
+                    "my_id" : my_id
+                ]
+            )
+            .execute()
+
+
+        if (200...299).contains(response.status) {
+            let data = try JSONDecoder().decode([SBUserModel].self, from: response.data)
             return data
         } else {
             let message = String(data: response.data, encoding: .utf8) ?? "Unknown error"

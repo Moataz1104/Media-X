@@ -145,8 +145,10 @@ class ProfileViewModel : ObservableObject {
     }
     
     
-    func handleFollow (userId:String) {
+    func handleFollow () {
+        guard let userId = self.userId else {return}
         guard let isFollower = isFollower else {return}
+        
         Task {
             do {
                 if isFollower {

@@ -8,7 +8,7 @@
 import SwiftUI
 import Kingfisher
 struct ProfileView: View {
-    
+    @EnvironmentObject var navigationStateManager: NavigationStateManager<AppNavigationPath>
     @EnvironmentObject var globalUser:GlobalUser
     @Environment(\.dismiss) var dismiss
     @Namespace private var tabAnimation
@@ -169,7 +169,7 @@ struct ProfileView: View {
             }else {
                 if let isFollower = viewModel.isFollower {
                     Button {
-                        viewModel.handleFollow(userId: self.userId)
+                        viewModel.handleFollow()
                     }label: {
                         Text(isFollower ? "Following": "Follow")
                             .foregroundStyle(.white)
@@ -360,12 +360,18 @@ struct ProfileView: View {
                             .foregroundStyle(.gray.opacity(0.5))
                         Spacer()
                         stateView(count: "\(viewModel.followersCount)", text: "followers")
+                            .onTapGesture {
+                                navigationStateManager.pushToStage(stage: .followersScreen(.followers, self.userId))
+                            }
                         Spacer()
                         Rectangle()
                             .frame(width: 1)
                             .foregroundStyle(.gray.opacity(0.5))
                         Spacer()
                         stateView(count: "\(viewModel.followingCount)", text: "Followings")
+                            .onTapGesture {
+                                navigationStateManager.pushToStage(stage: .followersScreen(.followings, self.userId))
+                            }
                         Spacer()
                     }
                 }

@@ -47,6 +47,8 @@ struct ContentView: View {
                     UserFormView()
                 case .profileView(let id) :
                     ProfileView(userId: id)
+                case .followersScreen(let state, let userId) :
+                    FollowersView(screenState: state, userId: userId)
                 }
             }
             .onAppear {
