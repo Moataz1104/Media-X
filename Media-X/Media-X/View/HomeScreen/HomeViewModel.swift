@@ -12,6 +12,8 @@ class HomeViewModel :ObservableObject{
     
     
     @Published var posts : [SBFetchedPost] = []
+    @Published var fetchedPost = [SBFetchedPost]() // one post from notifications
+    
     
     private let manager : PostsFetchingProtocol
     private var page = 0
@@ -19,6 +21,24 @@ class HomeViewModel :ObservableObject{
     init () {
         manager = FeedsManager()
     }
+    
+    func fetchOnePost(for postId:UUID) {
+        guard let userId =  manager.getUserId() else{return}
+        
+        Task {
+            do {
+                
+                self.fetchedPost = try await manager.fetchOnePost(userId: userId, postId: postId)
+                
+                
+            }catch {
+                print(error.localizedDescription)
+            }
+        }
+        
+        
+    }
+    
     
     func reFreshPosts() {
         page = 0

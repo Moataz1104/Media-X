@@ -24,7 +24,7 @@ struct TabBarView: View {
                     Group {
                         switch selectedTab {
                         case 0 :
-                            HomeView()
+                            HomeView(postId: nil)
                                 .padding(.top,40)
                         case 1:
                             Color
@@ -32,8 +32,8 @@ struct TabBarView: View {
                         case 2 :
                             Text("")
                         case 3 :
-                            Color
-                                .blue
+                            NotificationView()
+                                .padding(.top,40)
                         case 4 :
                             ProfileView(userId:globalUser.user?.id.uuidString ?? "",showBackButton:false)
                                 .padding(.top,60)

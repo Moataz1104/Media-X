@@ -57,6 +57,9 @@ class FollowersViewModel: ObservableObject {
                     try await unFollowUser(userId: userId)
                 }else {
                     try await followUser(userId: userId)
+                    if let uid = UUID(uuidString: userId) {
+                        PostNotification.shared.uploadNotification(toUserId: uid, action: .follow)
+                    }
                 }
             }catch {
                 print(error.localizedDescription)

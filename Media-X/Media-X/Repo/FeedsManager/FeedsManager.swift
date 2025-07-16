@@ -11,6 +11,7 @@ import Foundation
 
 protocol PostsFetchingProtocol:UserIDFetchable{
     func fetchPostsPagenated(userId:String,page:String) async throws -> [SBFetchedPost]
+    func fetchOnePost(userId: UUID, postId: UUID) async throws-> [SBFetchedPost]
 }
 protocol PostInteractionsProtocol:UserIDFetchable{
     func addLove(model:SBEmoji) async throws -> Result<Void, any Error>
@@ -32,6 +33,10 @@ protocol CommentProtocol:UserIDFetchable {
 
 class FeedsManager :PostsFetchingProtocol,PostInteractionsProtocol,SupaBaseFunctions ,CommentProtocol{
     
+    
+    func fetchOnePost(userId: UUID, postId: UUID) async throws-> [SBFetchedPost]{
+        try await getOnePostData(userId: userId, postId: postId)
+    }
     
     func fetchAllComments( userId:UUID,postId:UUID) async throws -> [SBFetchedComment]{
         try await fetchComments(userId: userId, postId: postId)

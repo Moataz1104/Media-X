@@ -34,6 +34,7 @@ class InterActionsViewModel : ObservableObject {
                     tempPost.lovesCount += 1
                     completion(tempPost)
                     try await self.addLove(postId: tempPost.postData.id, emojiId: id)
+                    PostNotification.shared.uploadNotification(toUserId: post.postData.userId, action: .like,postId: post.postData.id)
                 }
             }catch {
                 print(error.localizedDescription)
@@ -56,6 +57,8 @@ class InterActionsViewModel : ObservableObject {
                     tempPost.bookmarkId = id
                     completion(tempPost)
                     try await self.addBookmark(postId: tempPost.postData.id, bookmarkId: id)
+                    PostNotification.shared.uploadNotification(toUserId: post.postData.userId, action: .bookmark,postId: post.postData.id)
+
                 }
             }catch {
                 print(error.localizedDescription)

@@ -14,6 +14,7 @@ struct FeedsView: View {
     
     @State private var showComments: Bool = false
     @State private var ontapPostId:UUID?
+    @State private var ontapUsertId:UUID?
     @StateObject private var viewModel = InterActionsViewModel()
     var body: some View {
         LazyVStack{
@@ -32,6 +33,7 @@ struct FeedsView: View {
                     }
                 }commentAction: {
                     ontapPostId = posts[index].postData.id
+                    ontapUsertId = posts[index].postData.userId
                     showComments = true
                 }
                 .onAppear {
@@ -41,9 +43,14 @@ struct FeedsView: View {
                 }
             }
         }
-        .sheet(isPresented: $showComments,onDismiss: {self.ontapPostId = nil}) {
+        .sheet(isPresented: $showComments,onDismiss: {
+            self.ontapPostId = nil
+            self.ontapUsertId = nil
+        }) {
             CommentsSheet(
-                postId: ontapPostId ?? UUID())
+                postId: ontapPostId ?? UUID(),
+                userId: ontapUsertId ?? UUID()
+            )
         }
     }
 }

@@ -15,6 +15,7 @@ struct ProfileFeedsView:View {
     @Binding var posts:[SBFetchedPost]
     @StateObject private var viewModel = InterActionsViewModel()
     @State private var ontapPostId:UUID?
+    @State private var ontapUserId:UUID?
     @State private var showComments: Bool = false
     var body: some View {
         VStack {
@@ -26,11 +27,6 @@ struct ProfileFeedsView:View {
                 }label: {
                     Image(systemName: "xmark")
                         .foregroundColor(._3_B_9678)
-                        .onChange(of: ontapPostId) { oldValue, newValue in
-                            print("oldValue: \(oldValue)")
-                            print("newValue: \(newValue)")
-                            print("showComments: \(showComments)")
-                        }
                 }
                 Spacer()
             }
@@ -53,6 +49,7 @@ struct ProfileFeedsView:View {
                                 }
                             }commentAction: {
                                 ontapPostId = posts[index].postData.id
+                                ontapUserId = posts[index].postData.userId
                                 showComments = true
                             }
                             .id(posts[index].postData.id)
@@ -89,9 +86,12 @@ struct ProfileFeedsView:View {
         }
         .background(.F_6_F_8_FA)
         .opacity(opacity)
-        .sheet(isPresented: $showComments, onDismiss: { ontapPostId = nil }) {
-            if let id = ontapPostId {
-                CommentsSheet(postId: id)
+        .sheet(isPresented: $showComments, onDismiss: {
+            ontapPostId = nil
+            ontapUserId = nil
+        }) {
+            if let id = ontapPostId ,let ontapUserId = ontapUserId{
+                CommentsSheet(postId: id, userId: ontapUserId)
             } else {
                 EmptyView()
             }

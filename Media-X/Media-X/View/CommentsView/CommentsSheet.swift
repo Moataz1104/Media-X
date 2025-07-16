@@ -10,6 +10,7 @@ import Kingfisher
 
 struct CommentsSheet: View {
     @State var postId:UUID
+    @State var userId:UUID
     @StateObject private var viewModel = CommentViewModel()
     @StateObject private var keyboardObserver = KeyboardObserver()
     @EnvironmentObject var globalUser :GlobalUser
@@ -18,6 +19,7 @@ struct CommentsSheet: View {
             LoadingView(isLoading: $viewModel.isLoading)
                 .onAppear {
                     viewModel.postId = self.postId
+                    viewModel.userId = self.userId
                     viewModel.fetchComments()
                 }
         } else {

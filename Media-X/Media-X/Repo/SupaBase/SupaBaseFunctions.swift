@@ -60,6 +60,8 @@ protocol SupaBaseFunctions {
     func getPostsPagenated(userId:String,pageNumber:String) async throws -> [SBFetchedPost]
     func getUserFollowers(userId: UUID,my_id:UUID) async throws -> [SBUserModel]
     func getUserFollowings(userId: UUID,my_id:UUID) async throws -> [SBUserModel]
+    func getNotifications(userId:String) async throws -> [SBNotification]
+    func getOnePostData(userId:UUID , postId:UUID) async throws -> [SBFetchedPost]
 }
 
 extension SupaBaseFunctions {
@@ -485,6 +487,65 @@ extension SupaBaseFunctions {
                 NSLocalizedDescriptionKey: "Failed to fetch recommended chapters: \(message)"
             ])
         }
+    }
+    
+    func getNotifications(userId:String) async throws -> [SBNotification] {
+        let client = getSessionClient()
+        
+        let response = try await client
+            .rpc(
+                "get_user_notifications",
+                params: [
+                    "p_user_id": userId
+                ]
+            )
+            .execute()
+
+
+        if (200...299).contains(response.status) {
+            if response.data.isEmpty {
+                return []
+            }
+            let data = try JSONDecoder().decode([SBNotification].self, from: response.data)
+            return data
+        } else {
+            let message = String(data: response.data, encoding: .utf8) ?? "Unknown error"
+            throw NSError(domain: "SupabaseError", code: response.status, userInfo: [
+                NSLocalizedDescriptionKey: "Failed to fetch recommended chapters: \(message)"
+            ])
+        }
+
+    }
+    
+    func getOnePostData(userId:UUID , postId:UUID) async throws -> [SBFetchedPost] {
+        let client = getSessionClient()
+        
+        let response = try await client
+            .rpc(
+                "get_one_post_data",
+                params: [
+                    "p_post_id" : postId,
+                    "current_user_id": userId
+                ]
+            )
+            .execute()
+        
+//        if let s = String(data: response.data, encoding: .utf8) {
+//            print(s)
+//        }
+        if (200...299).contains(response.status) {
+            if response.data.isEmpty {
+                return []
+            }
+            let data = try JSONDecoder().decode([SBFetchedPost].self, from: response.data)
+            return data
+        } else {
+            let message = String(data: response.data, encoding: .utf8) ?? "Unknown error"
+            throw NSError(domain: "SupabaseError", code: response.status, userInfo: [
+                NSLocalizedDescriptionKey: "Failed to fetch recommended chapters: \(message)"
+            ])
+        }
+
     }
 }
 

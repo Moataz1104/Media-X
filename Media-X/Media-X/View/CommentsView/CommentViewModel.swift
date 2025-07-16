@@ -12,6 +12,7 @@ class CommentViewModel : ObservableObject {
  
     
     var postId:UUID?
+    var userId:UUID?
     private var fetchedComments : [SBFetchedComment] = []
     @Published var isLoading = true
     @Published var comments : [CommentCellModel] = []
@@ -109,6 +110,7 @@ class CommentViewModel : ObservableObject {
                     fetchedComments[index].likesCount += 1
                     handleCommentsTree()
                     try await self.addCommentLove(commentId: id,loveId:uuid)
+                    
                 }
                 
             }catch {
@@ -152,6 +154,9 @@ class CommentViewModel : ObservableObject {
                 switch result {
                 case .success(_):
                     print("addComment success")
+                    if let userId = self.userId {
+                        PostNotification.shared.uploadNotification(toUserId: userId, action: .comment,postId: postId)
+                    }
                 case .failure(let failure):
                     print(failure.localizedDescription)
                 }

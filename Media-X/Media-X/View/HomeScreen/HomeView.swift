@@ -9,51 +9,68 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var viewModel : HomeViewModel
+    let postId:UUID?
+    @Environment(\.dismiss) var dismiss
     var body: some View {
         ZStack {
             BackGroundColorView()
             
             VStack(alignment:.leading,spacing:0) {
-                Text("Media X")
-                    .customFont(.bold, size: 30)
-                    .foregroundStyle(._3_B_9678)
-                    .padding([.horizontal, .top])
-                
-                ScrollView(showsIndicators:false) {
+                HStack {
                     
-                    ScrollView(.horizontal,showsIndicators: false){
-                        HStack(spacing:20) {
-                            ForEach(0..<20){_ in
-                                StoryCellView()
+                    Button {
+                        viewModel.fetchedPost.removeAll()
+                        dismiss()
+                    }label: {
+                        Image(systemName: "chevron.left")
+                    }
+                    
+                    Text("Media X")
+                }
+                .customFont(.bold, size: 30)
+                .foregroundStyle(._3_B_9678)
+                .padding([.horizontal, .top])
+                
+                if let postId = postId {
+                    
+                    if let postId = self.postId {
+                        if viewModel.fetchedPost.isEmpty {
+                            LoadingView(isLoading: .constant(true))
+                                .onAppear {
+                                    viewModel.fetchOnePost(for: postId)
+                                }
+                        }else {
+                            ScrollView(showsIndicators:false) {
+                                FeedsView(posts: $viewModel.fetchedPost) {}
+                                .padding()
                             }
+                        }
+                    }
+                    
+                }else {
+                    ScrollView(showsIndicators:false) {
+                        ScrollView(.horizontal,showsIndicators: false){
+                            HStack(spacing:20) {
+                                ForEach(0..<20){_ in
+                                    StoryCellView()
+                                }
                                 
+                            }
+                            .padding()
+                        }
+                        
+                        FeedsView(posts: $viewModel.posts) {
+                            viewModel.fetchPosts()
                         }
                         .padding()
+                        
                     }
-                    
-                    FeedsView(posts: $viewModel.posts) {
-                        viewModel.fetchPosts()
+                    .refreshable {
+                        viewModel.reFreshPosts()
                     }
-                    .padding()
-                    
-                }
-                .refreshable {
-                    viewModel.reFreshPosts()
                 }
             }
-            
-            
         }
+        .navigationBarBackButtonHidden()
     }
 }
-
-#Preview {
-    HomeView()
-}
-
-
-
-
-
-
-
