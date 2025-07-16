@@ -27,8 +27,8 @@ struct TabBarView: View {
                             HomeView(postId: nil)
                                 .padding(.top,40)
                         case 1:
-                            Color
-                                .blue
+                            SearchView()
+                                .padding(.top,40)
                         case 2 :
                             Text("")
                         case 3 :

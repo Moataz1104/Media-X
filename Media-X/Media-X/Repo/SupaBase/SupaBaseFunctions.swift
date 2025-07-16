@@ -62,6 +62,8 @@ protocol SupaBaseFunctions {
     func getUserFollowings(userId: UUID,my_id:UUID) async throws -> [SBUserModel]
     func getNotifications(userId:String) async throws -> [SBNotification]
     func getOnePostData(userId:UUID , postId:UUID) async throws -> [SBFetchedPost]
+    func userSearch(userId:String , searchInput:String) async throws -> [SBUserModel]
+    func getRecentSearches(userId:UUID) async throws -> [SBUserModel]
 }
 
 extension SupaBaseFunctions {
@@ -538,6 +540,67 @@ extension SupaBaseFunctions {
                 return []
             }
             let data = try JSONDecoder().decode([SBFetchedPost].self, from: response.data)
+            return data
+        } else {
+            let message = String(data: response.data, encoding: .utf8) ?? "Unknown error"
+            throw NSError(domain: "SupabaseError", code: response.status, userInfo: [
+                NSLocalizedDescriptionKey: "Failed to fetch recommended chapters: \(message)"
+            ])
+        }
+
+    }
+    
+    func userSearch(userId:String , searchInput:String) async throws -> [SBUserModel] {
+        let client = getSessionClient()
+        
+        let response = try await client
+            .rpc(
+                "search_users",
+                params: [
+                    "p_user_id" : userId,
+                    "p_search": searchInput
+                ]
+            )
+            .execute()
+        
+//        if let s = String(data: response.data, encoding: .utf8) {
+//            print(s)
+//        }
+        if (200...299).contains(response.status) {
+            if response.data.isEmpty {
+                return []
+            }
+            let data = try JSONDecoder().decode([SBUserModel].self, from: response.data)
+            return data
+        } else {
+            let message = String(data: response.data, encoding: .utf8) ?? "Unknown error"
+            throw NSError(domain: "SupabaseError", code: response.status, userInfo: [
+                NSLocalizedDescriptionKey: "Failed to fetch recommended chapters: \(message)"
+            ])
+        }
+
+    }
+    
+    func getRecentSearches(userId:UUID) async throws -> [SBUserModel] {
+        let client = getSessionClient()
+        
+        let response = try await client
+            .rpc(
+                "get_recent_user_searches",
+                params: [
+                    "p_user_id" : userId
+                ]
+            )
+            .execute()
+        
+//        if let s = String(data: response.data, encoding: .utf8) {
+//            print(s)
+//        }
+        if (200...299).contains(response.status) {
+            if response.data.isEmpty {
+                return []
+            }
+            let data = try JSONDecoder().decode([SBUserModel].self, from: response.data)
             return data
         } else {
             let message = String(data: response.data, encoding: .utf8) ?? "Unknown error"

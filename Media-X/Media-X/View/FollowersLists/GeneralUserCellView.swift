@@ -15,7 +15,7 @@ struct GeneralUserCellView:View {
         HStack {
             if let url = URL(string: "\(Constants.SUPABASE_STORAGE_END_POINT)\(user.imageId)") {
                 ImageBorderView(imageUrl: url)
-                    .frame(width: 80)
+                    .frame(width: 80,height: 80)
             }
             Text(user.name)
                 .customFont(.medium, size: 20)

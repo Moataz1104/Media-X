@@ -36,7 +36,7 @@ struct FollowersView: View {
             }
             .padding([.horizontal,.top])
             SearchTextField(text: $viewModel.searchInput)
-            
+                .padding(.horizontal)
             ScrollView(showsIndicators: false) {
                 ForEach(viewModel.filteredUsers) { user in
                     GeneralUserCellView(user: user) {
