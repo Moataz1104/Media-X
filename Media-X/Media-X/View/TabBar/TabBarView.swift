@@ -14,6 +14,7 @@ struct TabBarView: View {
     @State private var selectedTab = 0
     @EnvironmentObject var uploadPostVM : UploadPostViewModel
     @State private var progressWidth : Double = 0.0
+    @EnvironmentObject var storyVM : StoryViewModel
     var body: some View {
         ZStack(alignment:.top) {
             ZStack{
@@ -63,7 +64,7 @@ struct TabBarView: View {
                     .overlay(alignment:.bottom) {
                         if uploadPostVM.uploadingProgress < 1 {
                             VStack(alignment:.leading) {
-                                Text("Uploading Post...")
+                                Text("Uploading \(uploadPostVM.uploadType?.rawValue ?? "")...")
                                     .customFont(.medium, size: 20)
                                     .foregroundStyle(.white)
                                 ZStack(alignment:.leading) {
@@ -104,6 +105,9 @@ struct TabBarView: View {
                                     .padding()
                                     .background(.white)
                                     .clipShape(.circle)
+                                    .onAppear {
+                                        storyVM.refresh()
+                                    }
                             }
                             .padding(.bottom)
                         }
@@ -111,6 +115,14 @@ struct TabBarView: View {
                     .ignoresSafeArea()
             }
             
+            if !storyVM.storyDetails.isEmpty {
+                StoryView(model: storyVM.storyDetails) {
+                    withAnimation {
+                        storyVM.storyDetails = []
+                    }
+                }
+                .transition(.asymmetric(insertion: .scale, removal: .opacity))
+            }
         }
         .navigationBarBackButtonHidden()
         

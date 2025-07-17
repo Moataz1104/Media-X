@@ -9,8 +9,9 @@ import Foundation
 
 protocol UploadPostProtocol:UserIDFetchable, ServerTimeFetchable {
     func uploadPost(model:SBPost) async throws -> Result<Void, any Error>
-    func uploadImageToStorage(data:Data,filePath:String) async throws -> Result<String, any Error>
-    func uploadImageModel(model:SBPostImage) async throws -> Result<Void, any Error>
+    func uploadImageToStorage(data:Data,filePath:String,isPost:Bool) async throws -> Result<String, any Error> 
+    func uploadImageModel<T: SupabaseUploadable>(model: T) async throws -> Result<Void, any Error>
+    func uploadStory(model:SBStory) async throws -> Result<Void, any Error>
 }
 
 
@@ -26,13 +27,21 @@ extension PostManager : UploadPostProtocol {
         try await uploadModel(model)
     }
     
-    func uploadImageToStorage(data:Data,filePath:String) async throws -> Result<String, any Error> {
-        try await uploadFileToStorage(bucket: Constants.POSTS_IMAGES_BUCKET, filePath: filePath, fileData: data,contentType: "application/octet-stream")
+    func uploadImageToStorage(data:Data,filePath:String,isPost:Bool) async throws -> Result<String, any Error> {
+        try await uploadFileToStorage(
+            bucket: isPost ? Constants.POSTS_IMAGES_BUCKET : Constants.STORIES_IMAGES_BUCKET,
+            filePath: filePath,
+            fileData: data,
+            contentType: "application/octet-stream"
+        )
     }
     
-    func uploadImageModel(model:SBPostImage) async throws -> Result<Void, any Error>{
+    func uploadImageModel<T: SupabaseUploadable>(model: T) async throws -> Result<Void, any Error> {
         try await uploadModel(model)
     }
-    
-    
+
+    func uploadStory(model:SBStory) async throws -> Result<Void, any Error>{
+        try await uploadModel(model)
+    }
+
 }

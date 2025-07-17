@@ -15,6 +15,7 @@ struct Media_XApp: App {
     @StateObject var globalUser = GlobalUser()
     @StateObject var uploadPostVM = UploadPostViewModel()
     @StateObject private var homeVM = HomeViewModel()
+    @StateObject private var storyVM = StoryViewModel()
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -23,6 +24,7 @@ struct Media_XApp: App {
                 .environmentObject(globalUser)
                 .environmentObject(uploadPostVM)
                 .environmentObject(homeVM)
+                .environmentObject(storyVM)
         }
     }
 }

@@ -22,20 +22,23 @@ final class AddPostViewModel: ObservableObject {
     @Published var selectedImageIds : [String] = []
     @Published var imagesData: [Data] = []
     @Published var showError: Bool = false
+    var uploadType: UploadType?
+    
     init(galleryManager: GalleryManager = GalleryManager()) {
         self.galleryManager = galleryManager
         fetchAllPhotos()
     }
     
     func handleOnTapImage(_ image: UIImage,id:String) {
-        guard selectedImageIds.count < 6 else{
-            showError = true
-            return
-        }
+        
         if let index = selectedImageIds.firstIndex(of: id) {
             selectedImageIds.remove(at: index)
             imagesData.remove(at: index)
         }else {
+            guard selectedImageIds.count < 6 else{
+                showError = true
+                return
+            }
             selectedImageIds.append(id)
             getImageDate(image: image)
         }

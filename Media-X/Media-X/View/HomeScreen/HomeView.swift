@@ -9,29 +9,32 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var viewModel : HomeViewModel
+    @EnvironmentObject var storyVM : StoryViewModel
     let postId:UUID?
     @Environment(\.dismiss) var dismiss
+    @State private var showAddStorySheet = false
+    @EnvironmentObject var globalUser:GlobalUser
     var body: some View {
         ZStack {
             BackGroundColorView()
             
             VStack(alignment:.leading,spacing:0) {
                 HStack {
-                    
-                    Button {
-                        viewModel.fetchedPost.removeAll()
-                        dismiss()
-                    }label: {
-                        Image(systemName: "chevron.left")
+                    if let _ = postId {
+                        Button {
+                            viewModel.fetchedPost.removeAll()
+                            dismiss()
+                        }label: {
+                            Image(systemName: "chevron.left")
+                        }
                     }
-                    
                     Text("Media X")
                 }
                 .customFont(.bold, size: 30)
                 .foregroundStyle(._3_B_9678)
                 .padding([.horizontal, .top])
                 
-                if let postId = postId {
+                if let _ = postId {
                     
                     if let postId = self.postId {
                         if viewModel.fetchedPost.isEmpty {
@@ -51,12 +54,42 @@ struct HomeView: View {
                     ScrollView(showsIndicators:false) {
                         ScrollView(.horizontal,showsIndicators: false){
                             HStack(spacing:20) {
-                                ForEach(0..<20){_ in
-                                    StoryCellView()
+                                if let user = globalUser.user {
+                                    if storyVM.ihaveStory {
+                                        menu(user: user)
+                                    }else {
+                                        StoryCellView(
+                                            model: user,
+                                            isMyCell: true,
+                                            ihaveStory: storyVM.ihaveStory,
+                                            loadingId: storyVM.storyLoadingId
+                                        )
+                                            .onTapGesture {
+                                                showAddStorySheet = true
+                                            }
+
+                                    }
+                                }
+                                
+                                ForEach(storyVM.userStoires){user in
+                                    StoryCellView(
+                                        model: user,
+                                        ihaveStory: nil,
+                                        loadingId: storyVM.storyLoadingId
+                                    )
+                                    .onTapGesture {
+                                        if storyVM.storyLoadingId == nil {
+                                            storyVM.getStoryDetails(userId: user.id)
+                                        }
+                                    }
+                                        
                                 }
                                 
                             }
                             .padding()
+                        }
+                        .sheet(isPresented: $showAddStorySheet) {
+                            AddPostView(showAddPostSheet:$showAddStorySheet, type: .story)
                         }
                         
                         FeedsView(posts: $viewModel.posts) {
@@ -67,10 +100,36 @@ struct HomeView: View {
                     }
                     .refreshable {
                         viewModel.reFreshPosts()
+                        storyVM.refresh()
                     }
                 }
             }
         }
         .navigationBarBackButtonHidden()
+    }
+    
+    @ViewBuilder
+    private func menu(user:SBUserModel) -> some View {
+        Menu {
+            Button {
+                showAddStorySheet = true
+            } label: {
+                Text("New Story")
+            }
+            
+            Button {
+                storyVM.getStoryDetails(userId: user.id)
+            } label: {
+                Text("Show Story")
+            }
+
+        } label: {
+            StoryCellView(model: user,isMyCell: true, ihaveStory: storyVM.ihaveStory, loadingId: storyVM.storyLoadingId)
+                .onTapGesture {
+                    showAddStorySheet = true
+                }
+        }
+        .menuStyle(.automatic)
+        
     }
 }

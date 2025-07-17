@@ -54,7 +54,7 @@ struct CustomBarView: View {
             .padding(.top)
             .frame(height: 100,alignment: .top)
             .sheet(isPresented: $showAddPostSheet) {
-                AddPostView(showAddPostSheet:$showAddPostSheet)
+                AddPostView(showAddPostSheet:$showAddPostSheet, type: .post)
             }
     }
 }

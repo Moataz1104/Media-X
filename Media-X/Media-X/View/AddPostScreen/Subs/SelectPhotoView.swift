@@ -18,7 +18,7 @@ struct SelectPhotoView:View {
                     .foregroundStyle(._3_B_9678)
                     .hidden()
                 Spacer()
-                Text("New post")
+                Text("New \(viewModel.uploadType?.rawValue ?? "")")
                     .customFont(.medium, size: 17)
                     .foregroundStyle(.black)
                 Spacer()

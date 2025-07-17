@@ -10,7 +10,9 @@ import SwiftUI
 struct AddPostView: View {
     @StateObject var navigationStateManager = NavigationStateManager(selectionPath: [AddPostNavigationPath]())
     @StateObject private var viewModel = AddPostViewModel()
+    @EnvironmentObject var uploadViewModel:UploadPostViewModel
     @Binding var showAddPostSheet:Bool
+    let type : UploadType
     var body: some View {
         NavigationStack(path: $navigationStateManager.selectionPath) {
             SelectPhotoView()
@@ -19,6 +21,10 @@ struct AddPostView: View {
                     case .addCaption :
                         AddCaptionView(showAddPostSheet:$showAddPostSheet)
                     }
+                }
+                .onAppear {
+                    viewModel.uploadType = type
+                    uploadViewModel.uploadType = type
                 }
         }
         .environmentObject(navigationStateManager)

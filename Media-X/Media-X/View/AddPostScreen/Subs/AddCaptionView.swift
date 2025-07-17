@@ -25,12 +25,16 @@ struct AddCaptionView: View {
                 }
                 
                 Spacer()
-                Text("New post")
+                Text("New \(viewModel.uploadType?.rawValue ?? "")")
                     .customFont(.medium, size: 17)
                     .foregroundStyle(.black)
                 Spacer()
                 Button {
-                    uploadPostVM.uploadPostData(imagesData: viewModel.imagesData, caption: viewModel.caption)
+                    if viewModel.uploadType == .post {
+                        uploadPostVM.uploadPostData(imagesData: viewModel.imagesData, caption: viewModel.caption)
+                    }else {
+                        uploadPostVM.uploadStoryData(imagesData: viewModel.imagesData, caption: viewModel.caption)
+                    }
                     showAddPostSheet = false
                     
                 }label: {

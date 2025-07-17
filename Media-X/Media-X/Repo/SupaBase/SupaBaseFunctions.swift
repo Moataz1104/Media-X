@@ -64,6 +64,8 @@ protocol SupaBaseFunctions {
     func getOnePostData(userId:UUID , postId:UUID) async throws -> [SBFetchedPost]
     func userSearch(userId:String , searchInput:String) async throws -> [SBUserModel]
     func getRecentSearches(userId:UUID) async throws -> [SBUserModel]
+    func getUsersStories(userId:UUID) async throws -> [SBUserModel]
+    func getStoryDetails(userId:UUID) async throws -> [SBStoryDetails]
 }
 
 extension SupaBaseFunctions {
@@ -601,6 +603,66 @@ extension SupaBaseFunctions {
                 return []
             }
             let data = try JSONDecoder().decode([SBUserModel].self, from: response.data)
+            return data
+        } else {
+            let message = String(data: response.data, encoding: .utf8) ?? "Unknown error"
+            throw NSError(domain: "SupabaseError", code: response.status, userInfo: [
+                NSLocalizedDescriptionKey: "Failed to fetch recommended chapters: \(message)"
+            ])
+        }
+
+    }
+    
+    func getUsersStories(userId:UUID) async throws -> [SBUserModel] {
+        let client = getSessionClient()
+        
+        let response = try await client
+            .rpc(
+                "get_following_users_with_stories",
+                params: [
+                    "p_user_id" : userId
+                ]
+            )
+            .execute()
+        
+//        if let s = String(data: response.data, encoding: .utf8) {
+//            print(s)
+//        }
+        if (200...299).contains(response.status) {
+            if response.data.isEmpty {
+                return []
+            }
+            let data = try JSONDecoder().decode([SBUserModel].self, from: response.data)
+            return data
+        } else {
+            let message = String(data: response.data, encoding: .utf8) ?? "Unknown error"
+            throw NSError(domain: "SupabaseError", code: response.status, userInfo: [
+                NSLocalizedDescriptionKey: "Failed to fetch recommended chapters: \(message)"
+            ])
+        }
+
+    }
+    
+    func getStoryDetails(userId:UUID) async throws -> [SBStoryDetails] {
+        let client = getSessionClient()
+        
+        let response = try await client
+            .rpc(
+                "get_story_details",
+                params: [
+                    "p_user_id" : userId
+                ]
+            )
+            .execute()
+        
+//        if let s = String(data: response.data, encoding: .utf8) {
+//            print(s)
+//        }
+        if (200...299).contains(response.status) {
+            if response.data.isEmpty {
+                return []
+            }
+            let data = try JSONDecoder().decode([SBStoryDetails].self, from: response.data)
             return data
         } else {
             let message = String(data: response.data, encoding: .utf8) ?? "Unknown error"

@@ -21,6 +21,7 @@ struct Constants{
     static let USERS_TABLE = "users"
     static let POSTS_TABLE = "posts"
     static let POSTS_IMAGES_TABLE = "posts_images"
+    static let STORIES_IMAGES_TABLE = "story_images"
     static let BOOKMAR_TABLE = "bookmarks"
     static let EMOJIS_TABLE = "emojis"
     static let FOLLOWERS_TABLE = "followers"
@@ -28,9 +29,12 @@ struct Constants{
     static let COMMENTS_LOVE_TABLE = "comments_love"
     static let NOTIFICATION_TABLE = "notifications"
     static let RECENT_SEARCHS_TABLE = "recent_searches"
+    static let STORIES_TABLE = "stories"
+    static let WATCHED_STORIES_TABLE = "watched_stories"
     //MARK: - Buckets
     static let USERS_IMAGES_BUCKET = "users.images"
     static let POSTS_IMAGES_BUCKET = "posts.images"
+    static let STORIES_IMAGES_BUCKET = "stories.images"
     
     //MARK: - Keys
     static let TOKEN = "token"
