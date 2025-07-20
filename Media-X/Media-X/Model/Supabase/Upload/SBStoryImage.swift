@@ -17,11 +17,12 @@ struct SBStoryImage : SupabaseUploadable {
     var storyId:UUID
     var urlString:String
     var imageIndex:Int
-    
+    var isWatched:Bool? = nil
     enum CodingKeys : String, CodingKey {
         case id
         case storyId = "story_id"
         case urlString = "url_string"
         case imageIndex = "image_index"
+        case isWatched = "is_watched"
     }
 }

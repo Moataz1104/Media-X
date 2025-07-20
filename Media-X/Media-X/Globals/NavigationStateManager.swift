@@ -40,7 +40,10 @@ enum AppNavigationPath: Hashable {
 
 enum AddPostNavigationPath: Hashable {
     case addCaption
-    
+}
+
+enum StoryNavigationPath: Hashable {
+    case profileView(id:String)
 }
 
 

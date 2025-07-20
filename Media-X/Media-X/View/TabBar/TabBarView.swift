@@ -116,7 +116,9 @@ struct TabBarView: View {
             }
             
             if !storyVM.storyDetails.isEmpty {
-                StoryView(model: storyVM.storyDetails) {
+                StorySheetView(
+                    isMyStory:globalUser.user?.id == storyVM.storyDetails[0].user.id,
+                               models: storyVM.storyDetails) {
                     withAnimation {
                         storyVM.storyDetails = []
                     }

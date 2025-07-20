@@ -16,11 +16,13 @@ struct SBWatchedStory :SupabaseUploadable{
     var id: UUID
     var userId:UUID
     var storyImageId:UUID
+    var createdAt:String?
     
     enum CodingKeys: String, CodingKey {
         case id
         case userId = "user_id"
         case storyImageId = "story_image_id"
+        case createdAt = "created_at"
     }
     
 }

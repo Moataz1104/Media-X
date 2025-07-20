@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct GeneralUserCellView:View {
+    @State var width:CGFloat = 80
     let user:SBUserModel
     let action:()->Void
     let ontapAction: () -> ()
@@ -15,7 +16,7 @@ struct GeneralUserCellView:View {
         HStack {
             if let url = URL(string: "\(Constants.SUPABASE_STORAGE_END_POINT)\(user.imageId)") {
                 ImageBorderView(imageUrl: url)
-                    .frame(width: 80,height: 80)
+                    .frame(width: width,height: width)
             }
             Text(user.name)
                 .customFont(.medium, size: 20)

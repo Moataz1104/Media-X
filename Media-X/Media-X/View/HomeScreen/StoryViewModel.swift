@@ -29,12 +29,13 @@ class StoryViewModel :ObservableObject{
     }
     
     func getStoryDetails(userId:UUID) {
+        guard let currentUserId = manager.getUserId() else { return }
         storyLoadingId = userId
         
         Task {
             do {
                 
-                    let data = try await manager.fetchStoryDetails(userId: userId)
+                let data = try await manager.fetchStoryDetails(userId: userId,currentUserId:currentUserId)
                 
                 withAnimation {
                     storyDetails = data
