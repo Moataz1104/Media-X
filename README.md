@@ -6,7 +6,7 @@ It allows users to share time-limited stories, explore content from others, and 
 Whether you're posting a moment, viewing updates from friends, or browsing profiles, Media X delivers a smooth and engaging experience designed for today's mobile users.
 
 
-🚀 Features
+# 🚀 Features
 🔐 Authentication
 
 Sign in with Google
@@ -46,7 +46,7 @@ Sign in with Email & Password
 • Follow/unfollow other users
 
 
-🛠 Tech Stack
+# 🛠 Tech Stack
 • SwiftUI – Modern declarative UI framework for building user interfaces on Apple platforms
 
 • Combine – Apple's reactive framework used for data binding and event handling
