@@ -14,6 +14,7 @@ struct HomeView: View {
     @Environment(\.dismiss) var dismiss
     @State private var showAddStorySheet = false
     @EnvironmentObject var globalUser:GlobalUser
+    @EnvironmentObject var uploadVM:UploadPostViewModel
     var body: some View {
         ZStack {
             BackGroundColorView()
@@ -55,18 +56,28 @@ struct HomeView: View {
                         ScrollView(.horizontal,showsIndicators: false){
                             HStack(spacing:20) {
                                 if let user = globalUser.user {
+                                    let tempUser = {
+                                        var modified = user
+                                        modified.name = "Me"
+                                        return modified
+                                    }()
                                     if storyVM.ihaveStory {
-                                        menu(user: user)
+                                        menu(user: tempUser)
                                     }else {
-                                        StoryCellView(
-                                            model: user,
-                                            isMyCell: true,
-                                            ihaveStory: storyVM.ihaveStory,
-                                            loadingId: storyVM.storyLoadingId
-                                        )
-                                            .onTapGesture {
-                                                showAddStorySheet = true
-                                            }
+                                        
+                                        Group {
+                                            StoryCellView(
+                                                model: tempUser,
+                                                isMyCell: true,
+                                                ihaveStory: storyVM.ihaveStory,
+                                                loadingId: storyVM.storyLoadingId
+                                            )
+                                                .onTapGesture {
+                                                    if !uploadVM.isLoading {
+                                                        showAddStorySheet = true
+                                                    }
+                                                }
+                                        }
 
                                     }
                                 }
@@ -112,7 +123,9 @@ struct HomeView: View {
     private func menu(user:SBUserModel) -> some View {
         Menu {
             Button {
-                showAddStorySheet = true
+                if !uploadVM.isLoading {
+                    showAddStorySheet = true
+                }
             } label: {
                 Text("New Story")
             }
@@ -120,13 +133,15 @@ struct HomeView: View {
             Button {
                 storyVM.getStoryDetails(userId: user.id)
             } label: {
-                Text("Show Story")
+                Text("View Story")
             }
 
         } label: {
             StoryCellView(model: user,isMyCell: true, ihaveStory: storyVM.ihaveStory, loadingId: storyVM.storyLoadingId)
                 .onTapGesture {
-                    showAddStorySheet = true
+                    if !uploadVM.isLoading {
+                        showAddStorySheet = true
+                    }
                 }
         }
         .menuStyle(.automatic)

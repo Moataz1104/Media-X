@@ -38,13 +38,16 @@ struct FollowersView: View {
             SearchTextField(text: $viewModel.searchInput)
                 .padding(.horizontal)
             ScrollView(showsIndicators: false) {
-                ForEach(viewModel.filteredUsers) { user in
-                    GeneralUserCellView(user: user) {
-                        viewModel.handleFollow(userId: self.userId,isFollower: user.isFollower ?? false)
-                    }ontapAction: {
-                        navigationStateManager.pushToStage(stage: .profileView(id: user.id.uuidString))
+                VStack {
+                    ForEach(viewModel.filteredUsers) { user in
+                        GeneralUserCellView(user: user) {
+                            viewModel.handleFollow(userId: self.userId,isFollower: user.isFollower ?? false)
+                        }ontapAction: {
+                            navigationStateManager.pushToStage(stage: .profileView(id: user.id.uuidString))
+                        }
                     }
                 }
+                .padding(.top)
             }
         }
         .dismissKeyboardOnTap()

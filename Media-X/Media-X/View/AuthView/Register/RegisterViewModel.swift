@@ -18,6 +18,7 @@ class RegisterViewModel : ObservableObject {
     @Published var isLoading = false
 
     
+    var subject = PassthroughSubject<SBUserModel?, Never> ()
     var successSubject = PassthroughSubject<Void,Never>()
     
     
@@ -39,6 +40,31 @@ class RegisterViewModel : ObservableObject {
             isLoading = false
         }
         
+    }
+    func signInWithGoogle() {
+        isLoading = true
+        Task {[weak self] in
+            guard let self = self else{return}
+            do {
+                let googleResult = try await SignInGoogle().startSignInWithGoogleFlow()
+                try await AuthManager.shared.signInWithGoogle(
+                    idToken: googleResult.idToken,
+                    nonce: googleResult.nonce
+                )
+                await self.getUser()
+            }catch{
+                print(error.localizedDescription)
+            }
+            isLoading = false
+        }
+    }
+    
+    private func getUser() async{
+        if let user = await AuthManager.shared.getUser() {
+            subject.send(user)
+        }else {
+            subject.send(nil)
+        }
     }
     
     private func isValidateIntputs() -> Bool {

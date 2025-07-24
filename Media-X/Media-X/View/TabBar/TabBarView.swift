@@ -61,6 +61,9 @@ struct TabBarView: View {
                 Rectangle()
                     .frame(height: 140)
                     .foregroundStyle(._3_B_9678)
+                    .onAppear {
+                        uploadPostVM.uploadingProgress = 0
+                    }
                     .overlay(alignment:.bottom) {
                         if uploadPostVM.uploadingProgress < 1 {
                             VStack(alignment:.leading) {
@@ -95,10 +98,10 @@ struct TabBarView: View {
                             .padding(.bottom)
                         }else {
                             HStack {
-                                Text("Post Uploaded Successfully")
+                                Text("\(uploadPostVM.uploadType?.rawValue ?? "") Uploaded Successfully")
                                     .customFont(.bold, size: 18)
                                     .foregroundStyle(.white)
-                                
+
                                 Image(systemName: "checkmark")
                                     .customFont(.bold, size: 18)
                                     .foregroundStyle(._3_B_9678)

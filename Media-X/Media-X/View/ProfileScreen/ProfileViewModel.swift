@@ -23,6 +23,7 @@ class ProfileViewModel : ObservableObject {
     @Published var followingCount = 0
     @Published var postsCount = 0
     @Published var isFollower:Bool?
+    @Published var loading = false
     
     var tempUserName = ""
     var tempBio :String?
@@ -58,16 +59,25 @@ class ProfileViewModel : ObservableObject {
         
     }
     func getUserData(userId:UUID)async throws -> SBUserModel? {
-        
+        await MainActor.run {
+            self.loading = true
+        }
         let result = try await manager.fetchUserData(userId: userId)
         switch result {
         case .success(let data):
+            await MainActor.run {
+                self.loading = false
+            }
             if let user = data.first {
                 return user
             }else {
                 return nil 
             }
+            
         case .failure(let failure):
+            await MainActor.run {
+                self.loading = false
+            }
             throw failure
         }
         
@@ -83,7 +93,6 @@ class ProfileViewModel : ObservableObject {
     
     private func getBookmarks()async throws -> [SBFetchedPost] {
         guard let id = manager.getUserId() else { return [] }
-        print(id.uuidString)
         return try await manager.getBookmarks(userId: id.uuidString)
         
     }

@@ -14,50 +14,45 @@ struct CommentCellView:View {
     let likeAction:()->()
     var body: some View {
         HStack(alignment:.top) {
-            VStack(alignment:.leading) {
-                
-                HStack {
-                    if let url = URL(string: "\(Constants.SUPABASE_STORAGE_END_POINT)\(model.imageId)") {
-                        KFImage(url)
-                            .placeholder {
-                                ProgressView()
-                            }
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 40,height: 40)
-                            .clipShape(Circle())
-                    }
-                    
-                    
-                    Text(model.userName)
-                        .customFont(.bold, size: 18)
-                        .foregroundStyle(.black)
-                    
-                    Text(HelperFunctions.formatTimeString(from: model.dateString))
-                        .customFont(.regular, size: 16)
-                        .foregroundStyle(.gray)
+            HStack(alignment:.top) {
+                if let url = URL(string: "\(Constants.SUPABASE_STORAGE_END_POINT)\(model.imageId)") {
+                    KFImage(url)
+                        .placeholder {
+                            ProgressView()
+                        }
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 40,height: 40)
+                        .clipShape(Circle())
                 }
                 
-                Text(model.comment)
-                    .lineSpacing(5)
-                    .customFont(.regular, size: 20)
-                    .foregroundStyle(.black)
-                
-                
-                Button {
-                    replyAction()
-                }label: {
+                VStack(alignment:.leading) {
+                    
+                    
+                    
+                    
                     HStack {
-                        Image(systemName: "arrow.turn.up.right")
-                            .customFont(.bold, size: 20)
-                            .foregroundStyle(replyId == model.id ? .blue : .gray)
+                        Text(model.userName)
+                            .customFont(.semiBold, size: 18)
+                            .foregroundStyle(.black)
                         
+                        Text(HelperFunctions.formatTimeString(from: model.dateString))
+                            .customFont(.regular, size: 16)
+                            .foregroundStyle(.gray)
+                        
+                    }
+                    Text(model.comment)
+                        .lineSpacing(5)
+                        .customFont(.regular, size: 14)
+                        .foregroundStyle(.black)
+                    Button {
+                        replyAction()
+                    }label: {
                         Text("Reply")
-                            .customFont(.bold, size: 16)
+                            .customFont(.medium, size: 12)
                             .foregroundStyle(replyId == model.id ? .blue : .gray)
                     }
                 }
-                
             }
             Spacer()
             VStack {

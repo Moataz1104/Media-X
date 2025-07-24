@@ -44,7 +44,10 @@ struct ContentView: View {
                 case .tabBar:
                     TabBarView()
                 case .register :
-                    RegisterView()
+                    RegisterView(){model in
+                        globalUser.user = model
+                        homeVM.fetchPosts()
+                    }
                 case .userForm:
                     UserFormView()
                 case .profileView(let id) :

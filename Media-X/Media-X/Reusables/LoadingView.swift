@@ -17,9 +17,12 @@ struct LoadingView: View {
                 .black
                 .opacity(0.5)
                 .ignoresSafeArea()
-            ActivityIndicatorView(isVisible: $isLoading, type: .rotatingDots(count: 5))
+            ActivityIndicatorView(
+                isVisible: $isLoading,
+                type: .arcs(count: 3, lineWidth: 2)
+            )
                 .frame(width:200,height: 200)
-                .foregroundStyle(._3_B_9678)
+                .foregroundStyle(.A_8_E_6_CF)
                 .onAppear{
                     globalLoading.isLoading = true
                 }

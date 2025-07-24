@@ -8,29 +8,6 @@
 import SwiftUI
 import Kingfisher
 
-struct IdentifiableUUID: Identifiable, Equatable {
-    let id: UUID
-}
-
-struct StorySheetView:View {
-    @StateObject var navigationStateManager = NavigationStateManager(selectionPath: [StoryNavigationPath]())
-    @State var isMyStory:Bool = false
-    let models: [SBStoryDetails]
-    let action:()->()
-    var body: some View {
-        NavigationStack(path: $navigationStateManager.selectionPath) {
-            StoryView(model: models,isMyStory:isMyStory, action: action)
-                .navigationDestination(for: StoryNavigationPath.self) { path in
-                    switch path {
-                    case .profileView(let id) :
-                        ProfileView(userId: id)
-                    }
-                }
-                .environmentObject(navigationStateManager)
-        }
-    }
-}
-
 struct StoryView: View {
     
     @EnvironmentObject var navigationStateManager: NavigationStateManager<StoryNavigationPath>
@@ -43,6 +20,7 @@ struct StoryView: View {
     let action:()->()
     init(model: [SBStoryDetails],isMyStory:Bool, action:@escaping ()->()) {
         self.model = model
+        
         let images: [String] = model.flatMap { $0.storyImages.map { $0.urlString } }
         let imagesIds: [UUID] = model.flatMap { $0.storyImages.map { $0.id } }
 
@@ -53,6 +31,7 @@ struct StoryView: View {
             Array(repeating: storyDetails.story.text, count: storyDetails.storyImages.count)
         }
         let watchedList : [Bool] = model.flatMap { $0.storyImages.map { $0.isWatched ?? false } }
+        
         _viewModel = StateObject(
             wrappedValue: StoryDetailsViewModel(
                 imageCount: model.reduce(into: 0) {
@@ -73,11 +52,16 @@ struct StoryView: View {
         ZStack(alignment: .top) {
             Color
                 .black
-//                .opacity(0.5)
             KFImage(URL(string: "\(Constants.SUPABASE_STORAGE_END_POINT)\(viewModel.images[viewModel.currentIndex])"))
                 .placeholder({
                     Rectangle()
                         .foregroundStyle(.gray)
+                        .onAppear {
+                            viewModel.pauseTimer()
+                        }
+                        .onDisappear {
+                            viewModel.resumeTimer()
+                        }
                 })
                 .resizable()
                 .scaledToFill()
@@ -125,7 +109,7 @@ struct StoryView: View {
                         
                         Text(HelperFunctions.formatTimeString(from:viewModel.dates[viewModel.currentIndex]))
                             .customFont(.regular, size: 12)
-                            .foregroundStyle(.gray)
+                            .foregroundStyle(.white.opacity(0.8))
                     }
                     
                     Spacer()
@@ -134,7 +118,7 @@ struct StoryView: View {
                     }label: {
                         Image(systemName: "xmark")
                             .customFont(.medium, size: 20)
-                            .foregroundStyle(._3_B_9678)
+                            .foregroundStyle(.white)
                     }
                 }
                 
@@ -255,192 +239,9 @@ struct StoryView: View {
     }
 }
 
-import SwiftUI
-import Combine
 
-class StoryDetailsViewModel: ObservableObject {
-    
-    @Published var currentIndex: Int = 0
-    @Published var progress:Double = 0
-    
-    private let manager : StoryWatchable
-    
-    private let imageCount: Int
-    private var cancellables = Set<AnyCancellable>()
-    private var timer: AnyCancellable?
-    var endSubject: PassthroughSubject<Void, Never> = .init()
-    var images: [String]
-    var imagesIds: [UUID]
-    var dates:[String]
-    var captions:[String]
-    var watchedList:[Bool]
-    var isPlaying : Bool = false
-    init(
-        imageCount: Int,
-        images:[String],
-        dates:[String],
-        captions:[String],
-        imagesids:[UUID],
-        watchedList:[Bool]
-    ) {
-        
-        manager = StoryManager()
-        self.imageCount = imageCount
-        self.images = images
-        self.dates = dates
-        self.captions = captions
-        self.imagesIds = imagesids
-        self.watchedList = watchedList
-        startTimer()
-        subscribeToProgress()
-        subscribeToCurrentIndex()
-    }
-    
-    deinit {
-        stopTimer()
-        print("story deinit")
-    }
-    
-    func getViewers(imageId:UUID) async throws->[SBUserModel]{
-        guard let userId = manager.getUserId() else {
-            return []
-        }
-        var data = try await manager.fetchStoryViewers(imageId: imageId)
-        data.removeAll(where: {$0.id == userId})
-        return data
-    }
-    
-    private func markStoryAsWatched() {
-        guard let id = manager.getUserId(),
-              !watchedList[currentIndex]
-        else{return}
-        
-        let model = SBWatchedStory(
-            id: UUID(),
-            userId: id,
-            storyImageId: imagesIds[currentIndex]
-        )
-        
-        Task {
-            do {
-                let result = try await manager.uploadWatchModel(model: model)
-                switch result {
-                case .success(_):
-                    print("uploadWatchModel success")
-                case .failure(let failure):
-                    print(failure.localizedDescription)
-                }
-            }catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    func startTimer() {
-        stopTimer()
-        isPlaying = true
-        timer = Timer.publish(every: 0.1, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in
-                guard let self = self else{return}
-                if self.progress >= 1 {
-                    self.progress = 0
-                }else {
-                    withAnimation {
-                        self.progress += (0.5 / 30)
-                    }
-                }
-            }
-    }
-    
-    private func subscribeToProgress() {
-        $progress
-            .sink { [weak self] progress in
-                if progress >= 1 {
-                    self?.nextImage()
-                }
-            }
-            .store(in: &cancellables)
-    }
-    
-    private func subscribeToCurrentIndex() {
-        $currentIndex
-            .sink { [weak self] _ in
-                self?.markStoryAsWatched()
-            }
-            .store(in: &cancellables)
-    }
-    
-    func stopTimer() {
-        timer?.cancel()
-        timer = nil
-        isPlaying = false
-    }
-    
-    func pauseTimer() {
-        stopTimer()
-        isPlaying = false
-    }
-    
-    func resumeTimer() {
-        startTimer()
-        isPlaying = true
-    }
-    
-    
-    func nextImage() {
-        if currentIndex < imageCount - 1 {
-            progress = 0
-            currentIndex += 1
-        }else {
-            endSubject.send(())
-        }
-    }
-    func previousImage() {
-        guard currentIndex > 0 else { return }
-        progress = 0
-        currentIndex -= 1
-    }
-    
+struct IdentifiableUUID: Identifiable, Equatable {
+    let id: UUID
 }
 
 
-struct StoryViewersView:View {
-    @EnvironmentObject var viewModel:StoryDetailsViewModel
-    @State private var users:[SBUserModel]?
-    let imageId:UUID
-    let onTapAction:(UUID)->()
-    var body: some View {
-        VStack {
-            Text("Views")
-                .customFont(.bold, size: 25)
-                .foregroundStyle(.black)
-                .padding([.top,.horizontal])
-            Spacer()
-            if let users = users {
-                ScrollView(showsIndicators: false) {
-                    VStack {
-                        ForEach(users) { user in
-                            GeneralUserCellView(width:50,user: user) {} ontapAction: {
-                                onTapAction(user.id)
-                            }
-                            Rectangle()
-                                .frame(height: 1)
-                                .foregroundStyle(.gray.opacity(0.5))
-                                .padding(.horizontal,30)
-                        }
-                    }
-                    .padding(.top)
-                }
-            }
-            
-        }
-        .task {
-            do {
-                self.users = try await viewModel.getViewers(imageId: self.imageId)
-            }catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
-}

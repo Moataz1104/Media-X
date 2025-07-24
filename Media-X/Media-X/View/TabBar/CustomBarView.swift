@@ -12,6 +12,7 @@ struct CustomBarView: View {
     @State private var showAlert = false
     @State private var showAddPostSheet = false
     @EnvironmentObject var uploadPostVM : UploadPostViewModel
+    
     var body: some View {
         
             HStack{

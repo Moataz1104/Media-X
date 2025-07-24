@@ -29,10 +29,18 @@ class GlobalUser:ObservableObject {
                         
                         if let id = id {
                             try await updateUserModel(userName: userName, imageId: id)
+                            await MainActor.run {
+                                self.user?.imageId = id
+                                self.user?.name = userName
+                                
+                            }
                         }
                     }
                 }else{
                     try await updateUserModel(userName: userName, imageId: self.user?.imageId ?? "")
+                    await MainActor.run {
+                        self.user?.name = userName
+                    }
                 }
             }catch {
                 print(error.localizedDescription)

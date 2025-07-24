@@ -21,46 +21,52 @@ struct ProfileView: View {
     @State var showBackButton:Bool = true
     var body: some View {
         ZStack {
-            VStack {
-                HStack {
-                    Button {
-                        dismiss()
-                    }label: {
-                        if showBackButton {
-                            Image(systemName: "chevron.left")
-                                .customFont(.bold, size: 20)
-                                .foregroundStyle(._3_B_9678)
-                        }else {
-                            Image(systemName: "chevron.left")
-                                .customFont(.bold, size: 20)
-                                .foregroundStyle(._3_B_9678)
-                                .hidden()
+            
+            if viewModel.loading {
+                LoadingView(isLoading: $viewModel.loading)
+            }else {
+                VStack {
+                    HStack {
+                        Button {
+                            dismiss()
+                        }label: {
+                            if showBackButton {
+                                Image(systemName: "chevron.left")
+                                    .customFont(.bold, size: 20)
+                                    .foregroundStyle(._3_B_9678)
+                            }else {
+                                Image(systemName: "chevron.left")
+                                    .customFont(.bold, size: 20)
+                                    .foregroundStyle(._3_B_9678)
+                                    .hidden()
+                            }
+                        }
+                        .padding([.top,.horizontal])
+                        Spacer()
+                    }
+                    ScrollView(showsIndicators: false) {
+                        VStack {
+                            headerView()
+                                .padding(.horizontal)
+                            
+                            TabView()
+                            
+                            
+                        }
+                        .padding(.vertical)
+                    }
+                    .refreshable {
+                        Task {
+                            await viewModel.fetchPosts(userId: self.userId)
                         }
                     }
-                    .padding([.top,.horizontal])
-                    Spacer()
                 }
-                ScrollView(showsIndicators: false) {
-                    VStack {
-                        headerView()
-                            .padding(.horizontal)
-                        
-                        TabView()
-                        
-                        
-                    }
-                    .padding(.vertical)
-                }
-                .refreshable {
-                    Task {
-                        await viewModel.fetchPosts(userId: self.userId)
-                    }
+                if let _ = onTapId  {
+                    ProfileFeedsView(scrollId: $onTapId, posts: $posts)
+                        .transition(.asymmetric(insertion: .opacity, removal: .opacity))
                 }
             }
-            if let _ = onTapId  {
-                ProfileFeedsView(scrollId: $onTapId, posts: $posts)
-                    .transition(.asymmetric(insertion: .opacity, removal: .opacity))
-            }
+            
         }
         .onAppear {
             Task {

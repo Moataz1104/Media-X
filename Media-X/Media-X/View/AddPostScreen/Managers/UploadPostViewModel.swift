@@ -27,6 +27,9 @@ class UploadPostViewModel : ObservableObject {
     }
     func uploadStoryData(imagesData:[Data],caption:String) {
         guard let userId = manager.getUserId() else{return}
+        self.uploadingProgress = 0
+        self.totalProgress = 0
+        self.singleProgress = 0
         isLoading = true
         totalProgress = imagesData.count + 1
         let storyId = UUID()

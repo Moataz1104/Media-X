@@ -43,6 +43,7 @@ struct AddCaptionView: View {
                         .foregroundStyle(._3_B_9678)
                 }
             }
+            .padding([.top,.horizontal])
             
             ScrollView(.horizontal,showsIndicators: false){
                 HStack{
@@ -73,6 +74,7 @@ struct AddCaptionView: View {
                         }
                     }
                 }
+                .padding(.horizontal)
             }
             
             
@@ -86,12 +88,12 @@ struct AddCaptionView: View {
                 .frame(height: 300)
                 .scrollContentBackground(.hidden)
                 .background(.clear)
-            
+                .padding()
         
 
             Spacer()
         }
-        .padding()
+        
         .navigationBarBackButtonHidden()
     }
 }
